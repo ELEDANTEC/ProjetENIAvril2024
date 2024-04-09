@@ -7,38 +7,42 @@ package fr.eni.projeteniavril2024.bo;
  */
 public class Bid {
     private String bidDate;
-    private int bidPrice;
-    private ItemSold itemSold;
+    private int bidAmount;
+    
+    private SoldItem item;
 
     public Bid() {
     }
 
-    public Bid(String bidDate, int bidPrice) {
+    public Bid(
+            String bidDate,
+            int bidAmount
+    ) {
         this.bidDate = bidDate;
-        this.bidPrice = bidPrice;
+        this.bidAmount = bidAmount;
     }
 
     public String getBidDate() {
         return bidDate;
     }
 
-    public int getBidPrice() {
-        return bidPrice;
+    public int getBidAmount() {
+        return bidAmount;
     }
 
     public void setBidDate(String bidDate) {
         this.bidDate = bidDate;
     }
 
-    public void setBidPrice(int bidPrice) {
-        this.bidPrice = bidPrice;
+    public void setBidAmount(int bidAmount) {
+        this.bidAmount = bidAmount;
     }
 
-    public ItemSold getItemSold() {
-        return itemSold;
+    public SoldItem getItem() {
+        return item;
     }
 
-    public void setItemSold(ItemSold itemSold) {
-        this.itemSold = itemSold;
+    public void setItem(SoldItem item) {
+        this.item = item;
     }
 }

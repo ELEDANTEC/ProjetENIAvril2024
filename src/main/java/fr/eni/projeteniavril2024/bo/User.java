@@ -2,55 +2,62 @@ package fr.eni.projeteniavril2024.bo;
 
 import java.util.List;
 
+/**
+ * Business model for a user
+ * @version 1.0
+ * @author yjeauneau
+ */
 public class User {
-    private int userNo;
-    private String pseudo;
+    private int userId;
+    private String username;
     private String lastName;
     private String firstName;
     private String email;
-    private String telephoneNumber;
-    private String road;
+    private String phone;
+    private String street;
     private String city;
-    private int postcode;
+    private String postalCode;
     private String password;
     private int credit;
-    private boolean admin;
-    private List<ItemSold> itemsSold;
-    private List<ItemSold> itemsPurchased;
+    private boolean administrator;
+    
+    private List<SoldItem> itemsSold;
+    private List<SoldItem> itemsPurchased;
     private List<Bid> bidsPlaced;
 
     public User() {
     }
 
-    public User(int userNo, String pseudo, String lastName, String firstName, String email, String telephoneNumber, String road, String city, int postcode, String password, int credit, boolean admin) {
-        this.userNo = userNo;
-        this.pseudo = pseudo;
+    public User(
+            int userId,
+            String username,
+            String lastName,
+            String firstName,
+            String email,
+            boolean administrator
+    ) {
+        this.userId = userId;
+        this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
-        this.telephoneNumber = telephoneNumber;
-        this.road = road;
-        this.city = city;
-        this.postcode = postcode;
-        this.password = password;
-        this.credit = credit;
-        this.admin = admin;
+        this.administrator = administrator;
     }
 
-    public int getUserNo() {
-        return userNo;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserNo(int userNo) {
-        this.userNo = userNo;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getPseudo() {
-        return pseudo;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getLastName() {
@@ -77,20 +84,20 @@ public class User {
         this.email = email;
     }
 
-    public String getTelephoneNumber() {
-        return telephoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelephoneNumber(String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getRoad() {
-        return road;
+    public String getStreet() {
+        return street;
     }
 
-    public void setRoad(String road) {
-        this.road = road;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getCity() {
@@ -101,12 +108,12 @@ public class User {
         this.city = city;
     }
 
-    public int getPostcode() {
-        return postcode;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setPostcode(int postcode) {
-        this.postcode = postcode;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getPassword() {
@@ -125,43 +132,43 @@ public class User {
         this.credit = credit;
     }
 
-    public boolean isAdmin() {
-        return admin;
+    public boolean isAdministrator() {
+        return administrator;
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setAdministrator(boolean administrator) {
+        this.administrator = administrator;
     }
 
-    public List<ItemSold> getItemsSold() {
+    public List<SoldItem> getItemsSold() {
         return itemsSold;
     }
 
-    public void setItemsSold(List<ItemSold> itemsSold) {
+    public void setItemsSold(List<SoldItem> itemsSold) {
         this.itemsSold = itemsSold;
     }
 
-    public void addItemSold(ItemSold itemSold) {
-        this.itemsSold.add(itemSold);
+    public void addItemSold(SoldItem soldItem) {
+        this.itemsSold.add(soldItem);
     }
 
-    public void removeItemSold(ItemSold itemSold) {
-        this.itemsSold.remove(itemSold);
+    public void removeItemSold(SoldItem soldItem) {
+        this.itemsSold.remove(soldItem);
     }
 
-    public List<ItemSold> getItemsPurchased() {
+    public List<SoldItem> getItemsPurchased() {
         return itemsPurchased;
     }
 
-    public void setItemsPurchased(List<ItemSold> itemsPurchased) {
+    public void setItemsPurchased(List<SoldItem> itemsPurchased) {
         this.itemsPurchased = itemsPurchased;
     }
 
-    public void addItemPurchased(ItemSold itemPurchased) {
+    public void addItemPurchased(SoldItem itemPurchased) {
         this.itemsPurchased.add(itemPurchased);
     }
 
-    public void removeItemPurchased(ItemSold itemPurchased) {
+    public void removeItemPurchased(SoldItem itemPurchased) {
         this.itemsPurchased.remove(itemPurchased);
     }
 

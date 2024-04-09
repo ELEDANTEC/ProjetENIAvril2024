@@ -6,30 +6,33 @@ package fr.eni.projeteniavril2024.bo;
  * @author yjeauneau
  */
 public class Category {
-    private int categoryNo;
-    private String wording;
+    private int categoryId;
+    private String label;
 
     public Category() {
     }
 
-    public Category(String wording, int categoryNo) {
-        this.wording = wording;
-        this.categoryNo = categoryNo;
+    public Category(
+            int categoryId,
+            String label
+    ) {
+        this.categoryId = categoryId;
+        this.label = label;
     }
 
-    public int getCategoryNo() {
-        return categoryNo;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryNo(int categoryNo) {
-        this.categoryNo = categoryNo;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getWording() {
-        return wording;
+    public String getLabel() {
+        return label;
     }
 
-    public void setWording(String wording) {
-        this.wording = wording;
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

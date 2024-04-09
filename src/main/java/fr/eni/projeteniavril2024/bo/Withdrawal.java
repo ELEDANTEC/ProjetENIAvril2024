@@ -1,25 +1,34 @@
 package fr.eni.projeteniavril2024.bo;
 
+/**
+ * Business model for a withdrawal
+ * @version 1.0
+ * @author yjeauneau
+ */
 public class Withdrawal {
-    private String road;
+    private String street;
     private String city;
-    private int postcode;
+    private int postalCode;
 
     public Withdrawal() {
     }
 
-    public Withdrawal(String road, String city, int postcode) {
-        this.road = road;
+    public Withdrawal(
+            String street,
+            String city,
+            int postalCode
+    ) {
+        this.street = street;
         this.city = city;
-        this.postcode = postcode;
+        this.postalCode = postalCode;
     }
 
-    public String getRoad() {
-        return road;
+    public String getStreet() {
+        return street;
     }
 
-    public void setRoad(String road) {
-        this.road = road;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getCity() {
@@ -30,11 +39,11 @@ public class Withdrawal {
         this.city = city;
     }
 
-    public int getPostcode() {
-        return postcode;
+    public int getPostalCode() {
+        return postalCode;
     }
 
-    public void setPostcode(int postcode) {
-        this.postcode = postcode;
+    public void setPostalCode(int postalCode) {
+        this.postalCode = postalCode;
     }
 }
