@@ -2,12 +2,14 @@ package fr.eni.projeteniavril2024.dal.impl;
 
 import fr.eni.projeteniavril2024.bo.Category;
 import fr.eni.projeteniavril2024.dal.CategoryDAO;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -30,7 +32,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     public List<Category> findAll() {
         return jdbcTemplate.query(
                 SELECT_ALL,
-                new BeanPropertyRowMapper<Category>(Category.class)
+                new CategoryRowMapper()
         );
     }
 
@@ -40,7 +42,18 @@ public class CategoryDAOImpl implements CategoryDAO {
         return namedParameterJdbcTemplate.queryForObject(
                 SELECT_BY_ID,
                 namedParameters,
-                new BeanPropertyRowMapper<Category>(Category.class)
+                new CategoryRowMapper()
         );
+    }
+
+    public static class CategoryRowMapper implements RowMapper<Category> {
+        @Override
+        public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Category category = new Category();
+            category.setCategoryId(rs.getInt("category_id"));
+            category.setLabel(rs.getString("label"));
+
+            return category;
+        }
     }
 }
