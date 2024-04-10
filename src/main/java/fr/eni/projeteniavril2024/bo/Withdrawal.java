@@ -6,21 +6,32 @@ package fr.eni.projeteniavril2024.bo;
  * @author yjeauneau
  */
 public class Withdrawal {
+    private int itemId;
     private String street;
     private String city;
-    private int postalCode;
+    private String postalCode;
 
     public Withdrawal() {
     }
 
     public Withdrawal(
+            int itemId,
             String street,
             String city,
-            int postalCode
+            String postalCode
     ) {
+        this.itemId = itemId;
         this.street = street;
         this.city = city;
         this.postalCode = postalCode;
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 
     public String getStreet() {
@@ -39,11 +50,11 @@ public class Withdrawal {
         this.city = city;
     }
 
-    public int getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(int postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 }

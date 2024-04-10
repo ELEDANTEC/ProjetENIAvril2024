@@ -1,5 +1,8 @@
 package fr.eni.projeteniavril2024.bo;
 
+import java.time.LocalDate;
+import java.util.List;
+
 /**
  * Business model for a sold item
  * @version 1.0
@@ -9,13 +12,15 @@ public class SoldItem {
     private int itemId;
     private String itemName;
     private String description;
-    private String startAuctionDate;
-    private String endAuctionDate;
+    private LocalDate startAuctionDate;
+    private LocalDate endAuctionDate;
     private int initialPrice;
     private int salePrice;
     private String saleStatus;
+
+    private User user;
     private Category category;
-    private Withdrawal withdrawal;
+    private List<Bid> bids;
 
     public SoldItem() {
     }
@@ -24,8 +29,8 @@ public class SoldItem {
             int itemId,
             String itemName,
             String description,
-            String startAuctionDate,
-            String endAuctionDate,
+            LocalDate startAuctionDate,
+            LocalDate endAuctionDate,
             int initialPrice,
             String saleStatus
     ) {
@@ -62,19 +67,19 @@ public class SoldItem {
         this.description = description;
     }
 
-    public String getStartAuctionDate() {
+    public LocalDate getStartAuctionDate() {
         return startAuctionDate;
     }
 
-    public void setStartAuctionDate(String startAuctionDate) {
+    public void setStartAuctionDate(LocalDate startAuctionDate) {
         this.startAuctionDate = startAuctionDate;
     }
 
-    public String getEndAuctionDate() {
+    public LocalDate getEndAuctionDate() {
         return endAuctionDate;
     }
 
-    public void setEndAuctionDate(String endAuctionDate) {
+    public void setEndAuctionDate(LocalDate endAuctionDate) {
         this.endAuctionDate = endAuctionDate;
     }
 
@@ -102,6 +107,14 @@ public class SoldItem {
         this.saleStatus = saleStatus;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -110,11 +123,19 @@ public class SoldItem {
         this.category = category;
     }
 
-    public Withdrawal getWithdrawal() {
-        return withdrawal;
+    public List<Bid> getBids() {
+        return bids;
     }
 
-    public void setWithdrawal(Withdrawal withdrawal) {
-        this.withdrawal = withdrawal;
+    public void setBids(List<Bid> bids) {
+        this.bids = bids;
+    }
+
+    public void addBid(Bid bid) {
+        this.bids.add(bid);
+    }
+
+    public void removeBid(Bid bid) {
+        this.bids.remove(bid);
     }
 }
