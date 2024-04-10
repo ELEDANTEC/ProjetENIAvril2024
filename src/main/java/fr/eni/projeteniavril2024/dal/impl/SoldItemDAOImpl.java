@@ -2,6 +2,7 @@ package fr.eni.projeteniavril2024.dal.impl;
 
 import fr.eni.projeteniavril2024.bo.Category;
 import fr.eni.projeteniavril2024.bo.SoldItem;
+import fr.eni.projeteniavril2024.bo.User;
 import fr.eni.projeteniavril2024.dal.SoldItemDAO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,15 +18,22 @@ import java.util.List;
 public class SoldItemDAOImpl implements SoldItemDAO {
     private static final String SELECT_ALL = "" +
             "SELECT si.item_id, si.item_name, si.description, si.start_auction_date, si.end_auction_date, si.initial_price, si.sale_price, si.user_id, si.category_id, " +
-            "       c.label " +
+            "       c.label, " +
+            "       u.username, u.last_name, u.first_name, u.email, u.phone, u.street, u.postal_code, u.city, u.credit, u.administrator " +
             "FROM SOLD_ITEMS AS si " +
             "   INNER JOIN CATEGORIES AS c " +
-            "       ON si.category_id = c.category_id;";
+            "       ON si.category_id = c.category_id " +
+            "   INNER JOIN USERS AS u " +
+            "       ON si.user_id = u.user_id;";
     private static final String SELECT_BY_ID = "" +
             "SELECT si.item_id, si.item_name, si.description, si.start_auction_date, si.end_auction_date, si.initial_price, si.sale_price, si.user_id, si.category_id, " +
-            "       c.label " +
+            "       c.label, " +
+            "       u.username, u.last_name, u.first_name, u.email, u.phone, u.street, u.postal_code, u.city, u.credit, u.administrator " +
             "FROM SOLD_ITEMS AS si " +
             "   INNER JOIN CATEGORIES AS c " +
+            "       ON si.category_id = c.category_id " +
+            "   INNER JOIN USERS AS u " +
+            "       ON si.user_id = u.user_id " +
             "WHERE si.item_id = :item_id";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -73,6 +81,20 @@ public class SoldItemDAOImpl implements SoldItemDAO {
             category.setCategoryId(rs.getInt("si.category_id"));
             category.setLabel(rs.getString("c.label"));
             soldItem.setCategory(category);
+
+            User user = new User();
+            user.setUserId(rs.getInt("si.user_id"));
+            user.setUsername(rs.getString("u.username"));
+            user.setLastName(rs.getString("u.last_name"));
+            user.setFirstName(rs.getString("u.first_name"));
+            user.setEmail(rs.getString("u.email"));
+            user.setPhone(rs.getString("u.phone"));
+            user.setStreet(rs.getString("u.street"));
+            user.setPostalCode(rs.getString("u.postal_code"));
+            user.setCity(rs.getString("u.city"));
+            user.setCredit(rs.getInt("u.credit"));
+            user.setAdministrator(rs.getBoolean("u.administrator"));
+            soldItem.setUser(user);
 
             return soldItem;
         }

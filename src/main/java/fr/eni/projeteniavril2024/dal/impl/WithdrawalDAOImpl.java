@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 @Repository
 public class WithdrawalDAOImpl implements WithdrawalDAO {
-    private static final String SELECT_BY_ID = "SELECT item_id, street, postal_code, city FROM WITHDRAWALS WHERE item_id = :item_id;";
+    private static final String SELECT_BY_ITEM_ID = "SELECT item_id, street, postal_code, city FROM WITHDRAWALS WHERE item_id = :item_id;";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -26,7 +26,7 @@ public class WithdrawalDAOImpl implements WithdrawalDAO {
     public Withdrawal findByItemId(int itemId) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("item_id", itemId);
         return namedParameterJdbcTemplate.queryForObject(
-                SELECT_BY_ID,
+                SELECT_BY_ITEM_ID,
                 namedParameters,
                 new WithdrawalRowMapper()
         );
