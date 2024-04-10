@@ -1,44 +1,62 @@
 package fr.eni.projeteniavril2024.bo;
 
+import java.time.LocalDateTime;
+
 /**
  * Business model for a bid
  * @version 1.0
  * @author yjeauneau
  */
 public class Bid {
-    private String bidDate;
-    private int bidPrice;
-    private ItemSold itemSold;
+    private int userId;
+    private int itemId;
+    private LocalDateTime bidDate;
+    private int bidAmount;
 
     public Bid() {
     }
 
-    public Bid(String bidDate, int bidPrice) {
+    public Bid(
+            int userId,
+            int itemId,
+            LocalDateTime bidDate,
+            int bidAmount
+    ) {
+        this.userId = userId;
+        this.itemId = itemId;
         this.bidDate = bidDate;
-        this.bidPrice = bidPrice;
+        this.bidAmount = bidAmount;
     }
 
-    public String getBidDate() {
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
+
+    public LocalDateTime getBidDate() {
         return bidDate;
     }
 
-    public int getBidPrice() {
-        return bidPrice;
-    }
-
-    public void setBidDate(String bidDate) {
+    public void setBidDate(LocalDateTime bidDate) {
         this.bidDate = bidDate;
     }
 
-    public void setBidPrice(int bidPrice) {
-        this.bidPrice = bidPrice;
+    public int getBidAmount() {
+        return bidAmount;
     }
 
-    public ItemSold getItemSold() {
-        return itemSold;
-    }
-
-    public void setItemSold(ItemSold itemSold) {
-        this.itemSold = itemSold;
+    public void setBidAmount(int bidAmount) {
+        this.bidAmount = bidAmount;
     }
 }
