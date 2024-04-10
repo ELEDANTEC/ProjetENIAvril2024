@@ -1,11 +1,14 @@
 package fr.eni.projeteniavril2024.controller;
 
+import fr.eni.projeteniavril2024.bll.UserService;
 import fr.eni.projeteniavril2024.bo.User;
-import fr.eni.projeteniavril2024.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -30,7 +33,7 @@ public class UserController {
     public String getUserById(@PathVariable int userId, Model model) {
         User user = userService.getUserById(userId);
         model.addAttribute("user", user);
-        return "Profil/MyProfil.html";
+        return "Profil/MyProfil";
     }
 
 }

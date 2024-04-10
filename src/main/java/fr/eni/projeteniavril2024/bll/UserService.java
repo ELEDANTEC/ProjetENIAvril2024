@@ -1,10 +1,11 @@
-package fr.eni.tp.projeteniavril2024.bll;
+package fr.eni.projeteniavril2024.bll;
 
 import fr.eni.projeteniavril2024.bo.User;
+import fr.eni.projeteniavril2024.dal.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class UserService {
