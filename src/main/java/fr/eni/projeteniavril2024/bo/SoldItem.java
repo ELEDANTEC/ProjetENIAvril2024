@@ -14,6 +14,7 @@ public class SoldItem {
     private int initialPrice;
     private int salePrice;
     private String saleStatus;
+
     private Category category;
     private Withdrawal withdrawal;
 
