@@ -16,11 +16,11 @@
                 <form id="updateUserForm" action="/api/user/update/{userId}" method="post">
                     <div class="mb-3 test">
                         <label for="pseudo" class="form-label">Pseudo</label>
-                        <input type="text" class="form-control" id="pseudo" value="${user.userName}">
+                        <input type="text" class="form-control" id="pseudo" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="lastName" class="form-label">Nom</label>
-                        <input type="text" class="form-control" id="lastName" >
+                        <input type="text" class="form-control" value="" id="lastName" >
                     </div>
                     <div class="mb-3 test">
                         <label for="firstName" class="form-label">Prénom</label>
@@ -28,35 +28,35 @@
                     </div>
                     <div class="mb-3 test">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email">
+                        <input type="email" class="form-control" id="email" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="telephoneNumber" class="form-label">Téléphone</label>
-                        <input type="email" class="form-control" id="telephoneNumber">
+                        <input type="email" class="form-control" id="telephoneNumber" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="street" class="form-label">Rue</label>
-                        <input type="text" class="form-control" id="street" aria-describedby="roadHelp">
+                        <input type="text" class="form-control" id="street" aria-describedby="roadHelp" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="postal_code" class="form-label">Code postal</label>
-                        <input type="email" class="form-control" id="postal_code">
+                        <input type="email" class="form-control" id="postal_code" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="city" class="form-label">Ville</label>
-                        <input type="text" class="form-control" id="city">
+                        <input type="text" class="form-control" id="city" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="password" class="form-label">Mot de passe actuel</label>
-                        <input type="password" class="form-control" id="password">
+                        <input type="password" class="form-control" id="password" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="newPassword" class="form-label">nouveau mot de passe</label>
-                        <input type="password" class="form-control" id="newPassword">
+                        <input type="password" class="form-control" id="newPassword" value="">
                     </div>
                     <div class="mb-3 test">
                         <label for="confirmationPassword" class="form-label">Confirmation</label>
-                        <input type="password" class="form-control" id="confirmationPassword">
+                        <input type="password" class="form-control" id="confirmationPassword" value="">
                     </div>
                 </form>
             </div>
@@ -68,51 +68,6 @@
 </div>
 </body>
 </html>
-
-<script>
-    function updateUser(userId) {
-        var pseudo = document.getElementById("pseudo").value;
-        var lastName = document.getElementById("lastName").value;
-        var firstName = document.getElementById("firstName").value;
-        var email = document.getElementById("email").value;
-        var phone = document.getElementById("phone").value;
-        var street = document.getElementById("street").value;
-        var postal_code = document.getElementById("postal_code").value;
-        var city = document.getElementById("city").value;
-
-        var userData = {
-            userId: userId,
-            username: pseudo,
-            lastName: lastName,
-            firstName: firstName,
-            email: email,
-            phone: phone,
-            street: street,
-            postal_code: postal_code,
-            city: city,
-        };
-
-        fetch("/api/user/update/" + userId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Updated successfully:', data);
-            })
-            .catch(error => {
-                console.error('There was an error updating the user:', error);
-            });
-    }
-</script>
 
 <style>
     .container-update-my-profil{

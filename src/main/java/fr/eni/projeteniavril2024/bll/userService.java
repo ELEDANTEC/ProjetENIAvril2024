@@ -12,17 +12,11 @@ public class UserService {
     @Autowired
     private UserDAO userDAO;
 
-    public void updateUser(int userId, User updatedUser) {
-        User existingUser = userDAO.getUserById(userId);
-        if (existingUser != null) {
-            // Mettre à jour les informations de l'utilisateur avec les nouvelles données
-            existingUser.setUsername(updatedUser.getUsername());
-            existingUser.setLastName(updatedUser.getLastName());
-            existingUser.setFirstName(updatedUser.getFirstName());
-            existingUser.setEmail(updatedUser.getEmail());
-            // Continuez avec d'autres champs...
+    public List<User> getAllUsers() {
+        return userDAO.getAllUsers();
+    }
 
-            userDAO.updateUser(existingUser);
-        }
+    public User getUserById(int userId) {
+        return userDAO.getUserById(userId);
     }
 }

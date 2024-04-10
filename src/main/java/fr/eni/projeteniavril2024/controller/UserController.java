@@ -14,9 +14,23 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/update/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable int userId, @RequestBody User user) {
-        userService.updateUser(userId, user);
-        return ResponseEntity.ok().build();
+    // Endpoint pour récupérer tous les utilisateurs
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
+
+    // Endpoint pour récupérer un utilisateur par son ID
+    @GetMapping("/{userId}")
+    public User getUserById(@PathVariable int userId) {
+        return userService.getUserById(userId);
+    }
+
+    @GetMapping("/user/{userId}")
+    public String getUserById(@PathVariable int userId, Model model) {
+        User user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        return "Profil/MyProfil.html";
+    }
+
 }
