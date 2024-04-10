@@ -19,7 +19,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_USERNAME = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE username = :username;";
 
     private final static String SELECT_ALL_USERS = "SELECT * FROM Users;";
-    private final static String SELECT_USER_BY_ID = "SELECT * FROM Users WHERE user_id = :usser_id;";
+    private final static String SELECT_USER_BY_ID = "SELECT * FROM Users WHERE user_id = :user_id;";
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -46,8 +46,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUserById(int userId) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("id", userId);
-        return namedParameterJdbcTemplate.queryForObject(SELECT_USER_BY_ID, namedParameters, new UserRowMapper());
+        namedParameters.addValue("user_id", userId);
+        return namedParameterJdbcTemplate.queryForObject(SELECT_BY_ID, namedParameters, new UserRowMapper());
     }
 
     @Override

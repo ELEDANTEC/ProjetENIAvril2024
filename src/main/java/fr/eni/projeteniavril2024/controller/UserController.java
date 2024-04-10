@@ -3,15 +3,14 @@ package fr.eni.projeteniavril2024.controller;
 import fr.eni.projeteniavril2024.bll.UserService;
 import fr.eni.projeteniavril2024.bo.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/user")
+@Controller
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -23,17 +22,10 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // Endpoint pour récupérer un utilisateur par son ID
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable int userId) {
-        return userService.getUserById(userId);
-    }
-
-    @GetMapping("/user/{userId}")
     public String getUserById(@PathVariable int userId, Model model) {
         User user = userService.getUserById(userId);
         model.addAttribute("user", user);
-        return "Profil/MyProfil";
+        return "Profil/MyProfil.html";
     }
-
 }
