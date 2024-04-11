@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        th:replace="~{layouts/layout :: layout(
+            pageContent=~{:: .main-content},
+            pageTitle=~{:: title},
+            additionalCss=~{}
+        )}"
+>
+
+<title>Accueil</title>
+
+<main class="main-content">
+    <h1 class="text-center">Liste des enchères</h1>
+    <div>
+        Filtres :
+    </div>
+    <form>
+        <div class="row g-4">
+            <div class="col">
+                <div>
+                    <input type="search" id="filters" class="w-75" placeholder="Le nom de l'article contient">
+                </div>
+                <div class="mt-3">
+                    <label for="category">Catégorie :</label>
+                    <select id="category" class="form-select w-75">
+                        <option value=0 selected="selected">
+                            Toutes
+                        </option>
+                        <option th:each="category: ${categories}" th:value="${category.categoryId}" th:text="${category.label}"> </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <button
+                        class="btn btn-primary w-75 h-75"
+                        type="button"
+                >
+                    Rechercher
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+        <div th:each="auction: ${auctions}" class="col">
+            <div th:if="${auction.saleStatus == 'En cours'}" class="card shadow border border-black border-3">
+                <div class="row g-0">
+                    <div class="col-md-3 m-3">
+                        <img th:src="@{${'/images/' + auction.itemId + '.png'}}" alt="Image" width="140" height="100"/>
+                    </div>
+                    <div class="col-md-7 m-3">
+                        <div>
+                            <a th:href="@{/auctions/details(auction=${auction.itemId})}">
+                                <span th:text="${auction.itemName}"></span>
+                            </a>
+                        </div>
+                        <div th:if="${auction.bids.size > 0}">
+                            Prix : <span th:text="${auction.bids.get(auction.bids.size() - 1).getBidAmount}"></span>
+                        </div>
+                        <div th:unless="${auction.bids.size > 0}">
+                            Prix : <span th:text="${auction.initialPrice}"></span>
+                        </div>
+                        <div>
+                            Fin de l'enchère : <span th:text="${auction.endAuctionDate}"></span>
+                        </div>
+                        <div>
+                            Vendeur : <span th:text="${auction.user.username}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</html>
