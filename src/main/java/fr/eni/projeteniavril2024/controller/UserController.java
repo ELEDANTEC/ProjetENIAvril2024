@@ -26,6 +26,31 @@ public class UserController {
     public String getUserById(@PathVariable int userId, Model model) {
         User user = userService.getUserById(userId);
         model.addAttribute("user", user);
-        return "Profil/MyProfil.html";
+        return "profil/my-profil.html";
+    }
+
+    @PostMapping("/update/{userId}")
+    public String updateUserById(@PathVariable int userId, @ModelAttribute User updatedUser, Model model) {
+        // Récupérer l'utilisateur à partir de la base de données
+        User userToUpdate = userService.getUserById(userId);
+
+        userToUpdate.setUsername(updatedUser.getUsername());
+        userToUpdate.setLastName(updatedUser.getLastName());
+        userToUpdate.setFirstName(updatedUser.getFirstName());
+        userToUpdate.setEmail(updatedUser.getEmail());
+        userToUpdate.setPhone(updatedUser.getPhone());
+        userToUpdate.setStreet(updatedUser.getStreet());
+        userToUpdate.setPostalCode(updatedUser.getPostalCode());
+        userToUpdate.setCity(updatedUser.getCity());
+        userToUpdate.setPassword(updatedUser.getPassword());
+        userService.updateUserById(userToUpdate);
+        return "redirect:/user/" + userId;
+    }
+
+    @GetMapping("/test/{userId}")
+    public String redirectToUpdateProfilePage(@PathVariable int userId, Model model) {
+        User user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        return "profil/update-my-profil.html";
     }
 }

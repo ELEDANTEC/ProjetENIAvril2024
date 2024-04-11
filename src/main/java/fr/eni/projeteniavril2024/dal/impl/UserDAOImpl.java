@@ -17,9 +17,8 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_ID = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE user_id = :user_id;";
     private static final String SELECT_BY_EMAIL = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE email = :email;";
     private static final String SELECT_BY_USERNAME = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE username = :username;";
-
+    private static final String UPDATE_BY_ID = "UPDATE USERS SET " + "username = :username, " + "last_name = :last_name, " + "first_name = :first_name, " + "email = :email, " + "phone = :phone, " + "street = :street, " + "postal_code = :postal_code, " + "city = :city, " + "password = :password " + "WHERE user_id = :user_id;";
     private final static String SELECT_ALL_USERS = "SELECT * FROM Users;";
-    private final static String SELECT_USER_BY_ID = "SELECT * FROM Users WHERE user_id = :user_id;";
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -68,6 +67,23 @@ public class UserDAOImpl implements UserDAO {
                 namedParameters,
                 new UserRowMapper()
         );
+    }
+
+    @Override
+    public void updateUserById(User user) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("user_id", user.getUserId());
+        namedParameters.addValue("username", user.getUsername());
+        namedParameters.addValue("last_name", user.getLastName());
+        namedParameters.addValue("first_name", user.getFirstName());
+        namedParameters.addValue("email", user.getEmail());
+        namedParameters.addValue("phone", user.getPhone());
+        namedParameters.addValue("street", user.getStreet());
+        namedParameters.addValue("postal_code", user.getPostalCode());
+        namedParameters.addValue("city", user.getCity());
+        namedParameters.addValue("password", user.getPassword());
+
+        namedParameterJdbcTemplate.update(UPDATE_BY_ID, namedParameters);
     }
 
     public static class UserRowMapper implements RowMapper<User> {
