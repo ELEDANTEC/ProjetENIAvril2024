@@ -21,13 +21,6 @@ public class AppSecurityConfiguration {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/", "/auctions", "/signin", "/css/**", "/images/**").permitAll()
-
-                                .requestMatchers(HttpMethod.GET, "/*").hasRole("MEMBER")
-                                .requestMatchers(HttpMethod.POST, "/*").hasRole("MEMBER")
-
-                                .requestMatchers(HttpMethod.GET, "/*").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/*").hasRole("ADMIN")
-
                                 .anyRequest().authenticated())
 
                 .formLogin(form ->
