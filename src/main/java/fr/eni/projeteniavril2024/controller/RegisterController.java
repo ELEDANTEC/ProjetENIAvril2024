@@ -16,13 +16,13 @@ public class RegisterController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "register";
+        return "security/register.html";
     }
 
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "register";
+            return "security/register.html";
         }
 
         model.addAttribute("successMessage", "Votre compte a été créé avec succès !");

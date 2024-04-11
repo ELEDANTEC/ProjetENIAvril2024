@@ -18,7 +18,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_EMAIL = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE email = :email;";
     private static final String SELECT_BY_USERNAME = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE username = :username;";
     private static final String UPDATE_BY_ID = "UPDATE USERS SET " + "username = :username, " + "last_name = :last_name, " + "first_name = :first_name, " + "email = :email, " + "phone = :phone, " + "street = :street, " + "postal_code = :postal_code, " + "city = :city, " + "password = :password " + "WHERE user_id = :user_id;";
-    private final static String SELECT_ALL_USERS = "SELECT * FROM Users;";
+    private final static String SELECT_ALL_USERS = "SELECT * FROM USERS";
     private final static String CREATE_USER = "INSERT INTO USERS (username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
