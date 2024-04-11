@@ -46,6 +46,11 @@ public class UserController {
         userService.updateUserById(userToUpdate);
         return "redirect:/user/" + userId;
     }
+    @PostMapping("/create")
+    public String createUser(@ModelAttribute User user) {
+        userService.createUser(user);
+        return "redirect:/security/login";
+    }
 
     @GetMapping("/test/{userId}")
     public String redirectToUpdateProfilePage(@PathVariable int userId, Model model) {
@@ -53,4 +58,6 @@ public class UserController {
         model.addAttribute("user", user);
         return "profil/update-my-profil.html";
     }
+
+
 }
