@@ -52,6 +52,7 @@ public class AppSecurityConfiguration {
 
         return jdbcUserDetailsManager;
     }
+
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
