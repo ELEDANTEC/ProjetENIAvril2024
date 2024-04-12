@@ -20,17 +20,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_ID = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE user_id = :user_id;";
     private static final String SELECT_BY_EMAIL = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE email = :email;";
     private static final String SELECT_BY_USERNAME = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE username = :username;";
-    private static final String UPDATE_BY_ID = "UPDATE USERS SET "
-            + "username = :username, "
-            + "last_name = :last_name, "
-            + "first_name = :first_name, "
-            + "email = :email, "
-            + "phone = :phone, "
-            + "street = :street, "
-            + "postal_code = :postal_code, "
-            + "city = :city, "
-            + "password = :password "
-            + "WHERE user_id = :user_id";
+    private static final String UPDATE_BY_ID = "UPDATE USERS SET username = :username, last_name = :last_name, first_name = :first_name, email = :email, phone = :phone, street = :street, postal_code = :postal_code, city = :city, password = :password WHERE user_id = :user_id;";
     private static final String INSERT_USER = "INSERT INTO USERS ("
             + "username, "
             + "last_name, "
@@ -47,7 +37,10 @@ public class UserDAOImpl implements UserDAO {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public UserDAOImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public UserDAOImpl(
+            JdbcTemplate jdbcTemplate,
+            NamedParameterJdbcTemplate namedParameterJdbcTemplate
+    ) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
@@ -95,7 +88,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void updateUser(User user) {
-        String sql = "UPDATE USERS SET username = :username, last_name = :last_name, first_name = :first_name, email = :email, phone = :phone, street = :street, postal_code = :postal_code, city = :city, password = :password WHERE user_id = :user_id";
 
         Map<String, Object> params = new HashMap<>();
         params.put("username", user.getUsername());
@@ -109,7 +101,7 @@ public class UserDAOImpl implements UserDAO {
         params.put("password", user.getPassword());
         params.put("user_id", user.getUserId());  // Assurez-vous que votre objet User a un attribut userId
 
-        namedParameterJdbcTemplate.update(sql, params);
+        namedParameterJdbcTemplate.update(UPDATE_BY_ID, params);
     }
 
 

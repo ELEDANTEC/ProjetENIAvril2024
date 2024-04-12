@@ -30,7 +30,10 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public String getUserById(@PathVariable int userId, Model model) {
+    public String getUserById(
+            @PathVariable int userId,
+            Model model
+    ) {
         User user = userService.getUserById(userId);
         model.addAttribute("user", user);
         return "profil/my-profil.html";
@@ -70,7 +73,10 @@ public class UserController {
     }
 
     @GetMapping("/test/{userId}")
-    public String redirectToUpdateProfilePage(@PathVariable int userId, Model model) {
+    public String redirectToUpdateProfilePage(
+            @PathVariable int userId,
+            Model model
+    ) {
         User user = userService.getUserById(userId);
         model.addAttribute("user", user);
         return "profil/update-my-profil.html";
