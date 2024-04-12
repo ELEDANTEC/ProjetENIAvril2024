@@ -2,9 +2,10 @@ package fr.eni.projeteniavril2024.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,7 +27,7 @@ public class AppSecurityConfiguration {
                 .formLogin(form ->
                         form
                                 .loginPage("/login").permitAll()
-                                .defaultSuccessUrl("/"))
+                                .defaultSuccessUrl("/session"))
 
                 .logout(logout ->
                         logout
@@ -50,5 +51,9 @@ public class AppSecurityConfiguration {
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(sqlAuthorities);
 
         return jdbcUserDetailsManager;
+    }
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 }
