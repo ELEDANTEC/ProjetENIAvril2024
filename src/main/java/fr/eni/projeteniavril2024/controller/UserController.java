@@ -1,8 +1,10 @@
 package fr.eni.projeteniavril2024.controller;
 
 import fr.eni.projeteniavril2024.bll.UserService;
+import fr.eni.projeteniavril2024.bll.impl.UserServiceImpl;
 import fr.eni.projeteniavril2024.bo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    private PasswordEncoder encoder;
+
+    public UserController(PasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
 
     // Endpoint pour récupérer tous les utilisateurs
     @GetMapping
@@ -41,9 +48,16 @@ public class UserController {
         userToUpdate.setStreet(updatedUser.getStreet());
         userToUpdate.setPostalCode(updatedUser.getPostalCode());
         userToUpdate.setCity(updatedUser.getCity());
-        userToUpdate.setPassword(updatedUser.getPassword());
 
-        userService.updateUserById(userToUpdate);
+        // Vérification et mise à jour du mot de passe
+        if (updatedUser.getNewPassword() != null && !updatedUser.getNewPassword().isEmpty()
+                && updatedUser.getConfirmationPassword() != null && !updatedUser.getConfirmationPassword().isEmpty()
+                && updatedUser.getPassword() != null && encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
+                && updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())) {
+            userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
+        }
+
+        userService.updateUser(userToUpdate);
         model.addAttribute("user", userToUpdate);
         return "redirect:/user/" + userId;
     }

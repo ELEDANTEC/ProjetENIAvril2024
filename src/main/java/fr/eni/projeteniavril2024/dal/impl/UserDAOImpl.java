@@ -11,14 +11,37 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_ID = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE user_id = :user_id;";
     private static final String SELECT_BY_EMAIL = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE email = :email;";
     private static final String SELECT_BY_USERNAME = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE username = :username;";
-    private static final String UPDATE_BY_ID = "UPDATE USERS SET " + "username = :username, " + "last_name = :last_name, " + "first_name = :first_name, " + "email = :email, " + "phone = :phone, " + "street = :street, " + "postal_code = :postal_code, " + "city = :city, " + "password = :password " + "WHERE user_id = :user_id;";
+    private static final String UPDATE_BY_ID = "UPDATE USERS SET "
+            + "username = :username, "
+            + "last_name = :last_name, "
+            + "first_name = :first_name, "
+            + "email = :email, "
+            + "phone = :phone, "
+            + "street = :street, "
+            + "postal_code = :postal_code, "
+            + "city = :city, "
+            + "password = :password "
+            + "WHERE user_id = :user_id";
+    private static final String INSERT_USER = "INSERT INTO USERS ("
+            + "username, "
+            + "last_name, "
+            + "first_name, "
+            + "email, "
+            + "phone, "
+            + "street, "
+            + "postal_code, "
+            + "city, "
+            + "password) "
+            + "VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password)";
     private final static String SELECT_ALL_USERS = "SELECT * FROM Users;";
 
     private final JdbcTemplate jdbcTemplate;
@@ -71,20 +94,39 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateUserById(User user) {
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("username", user.getUsername())
-                .addValue("last_name", user.getLastName())
-                .addValue("first_name", user.getFirstName())
-                .addValue("email", user.getEmail())
-                .addValue("phone", user.getPhone())
-                .addValue("street", user.getStreet())
-                .addValue("postal_code", user.getPostalCode())
-                .addValue("city", user.getCity())
-                .addValue("password", user.getPassword())
-                .addValue("user_id", user.getUserId());
+    public void updateUser(User user) {
+        String sql = "UPDATE USERS SET username = :username, last_name = :last_name, first_name = :first_name, email = :email, phone = :phone, street = :street, postal_code = :postal_code, city = :city, password = :password WHERE user_id = :user_id";
 
-        namedParameterJdbcTemplate.update(UPDATE_BY_ID, namedParameters);
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", user.getUsername());
+        params.put("last_name", user.getLastName());
+        params.put("first_name", user.getFirstName());
+        params.put("email", user.getEmail());
+        params.put("phone", user.getPhone());
+        params.put("street", user.getStreet());
+        params.put("postal_code", user.getPostalCode());
+        params.put("city", user.getCity());
+        params.put("password", user.getPassword());
+        params.put("user_id", user.getUserId());  // Assurez-vous que votre objet User a un attribut userId
+
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+
+    @Override
+    public void saveUser(User user) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("username", user.getUsername());
+        paramMap.put("last_name", user.getLastName());
+        paramMap.put("first_name", user.getFirstName());
+        paramMap.put("email", user.getEmail());
+        paramMap.put("phone", user.getPhone());
+        paramMap.put("street", user.getStreet());
+        paramMap.put("postal_code", user.getPostalCode());
+        paramMap.put("city", user.getCity());
+        paramMap.put("password", user.getPassword());
+
+        jdbcTemplate.update(INSERT_USER, paramMap);
     }
 
     public static class UserRowMapper implements RowMapper<User> {

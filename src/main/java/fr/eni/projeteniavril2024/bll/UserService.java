@@ -3,25 +3,16 @@ package fr.eni.projeteniavril2024.bll;
 import fr.eni.projeteniavril2024.bo.User;
 import fr.eni.projeteniavril2024.dal.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    @Autowired
-    private UserDAO userDAO;
+    List<User> getAllUsers();
 
-    public List<User> getAllUsers() {
-        return userDAO.getAllUsers();
-    }
+    User getUserById(int userId);
 
-    public User getUserById(int userId) {
-        return userDAO.getUserById(userId);
-    }
+    void updateUser(User user);
 
-    public void updateUserById(User user) {
-        userDAO.updateUserById(user);
-    }
+    void saveUser(User user);
 }

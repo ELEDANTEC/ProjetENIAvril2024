@@ -35,11 +35,11 @@
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="password" class="form-label">Mot de passe actuel</label>
-                                    <input type="password" class="form-control" id="password" th:field="*{user.password}" th:value="${user.password}">
+                                    <input type="password" class="form-control" id="password" th:field="*{user.password}" >
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="newPassword" class="form-label">nouveau mot de passe</label>
-                                    <input type="password" class="form-control" id="newPassword" >
+                                    <input type="password" class="form-control" id="newPassword" th:field="*{user.newPassword}" >
                                 </div>
                                 <div class="mb-3 test">
                                     <div>Crédits</div>
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="confirmationPassword" class="form-label">Confirmation</label>
-                                    <input type="password" class="form-control" id="confirmationPassword" >
+                                    <input type="password" class="form-control" id="confirmationPassword" th:field="*{user.confirmationPassword}">
                                 </div>
                             </div>
                         </div>
@@ -73,10 +73,9 @@
                             <button type="submit" class="btn btn-primary">Enregistrer</button>
                         </div>
                         <div class="d-grid gap-2 col-6 mx-auto">
-                            <button type="button" class="btn btn-primary">Supprmier mon compte</button>
+                            <button type="button" class="btn btn-primary">Supprimer mon compte</button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

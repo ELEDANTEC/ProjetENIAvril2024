@@ -9,5 +9,8 @@ public interface UserDAO {
     User findById(int id);
     User findByEmail(String email);
     User findByUsername(String username);
-    void updateUserById(User user);
+//    void updateUserById(User user);
+    void updateUser(User user);
+    void saveUser(User user);
+
 }

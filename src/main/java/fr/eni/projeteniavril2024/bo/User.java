@@ -20,7 +20,8 @@ public class User {
     private String password;
     private int credit;
     private boolean administrator;
-    
+    private String newPassword;
+    private String confirmationPassword;
     private List<SoldItem> itemsSold;
     private List<SoldItem> itemsPurchased;
     private List<Bid> bidsPlaced;
@@ -138,6 +139,22 @@ public class User {
 
     public void setAdministrator(boolean administrator) {
         this.administrator = administrator;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getConfirmationPassword() {
+        return confirmationPassword;
+    }
+
+    public void setConfirmationPassword(String confirmationPassword) {
+        this.confirmationPassword = confirmationPassword;
     }
 
     public List<SoldItem> getItemsSold() {
