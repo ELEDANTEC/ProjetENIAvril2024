@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -71,17 +72,17 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void updateUserById(User user) {
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("user_id", user.getUserId());
-        namedParameters.addValue("username", user.getUsername());
-        namedParameters.addValue("last_name", user.getLastName());
-        namedParameters.addValue("first_name", user.getFirstName());
-        namedParameters.addValue("email", user.getEmail());
-        namedParameters.addValue("phone", user.getPhone());
-        namedParameters.addValue("street", user.getStreet());
-        namedParameters.addValue("postal_code", user.getPostalCode());
-        namedParameters.addValue("city", user.getCity());
-        namedParameters.addValue("password", user.getPassword());
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("username", user.getUsername())
+                .addValue("last_name", user.getLastName())
+                .addValue("first_name", user.getFirstName())
+                .addValue("email", user.getEmail())
+                .addValue("phone", user.getPhone())
+                .addValue("street", user.getStreet())
+                .addValue("postal_code", user.getPostalCode())
+                .addValue("city", user.getCity())
+                .addValue("password", user.getPassword())
+                .addValue("user_id", user.getUserId());
 
         namedParameterJdbcTemplate.update(UPDATE_BY_ID, namedParameters);
     }

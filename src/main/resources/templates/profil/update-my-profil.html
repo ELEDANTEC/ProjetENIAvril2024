@@ -14,64 +14,69 @@
             <div class="col-md-12">
                 <div class="title">ENI-Enchères</div>
                 <div class="content-profil-value">
-                    <form id="updateUserForm" method="post">
+                    <form id="updateUserForm" th:action="@{/user/update/{userId}(userId=${user.userId})}" method="post">
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3 test">
-                                    <label for="pseudo" class="form-label">Pseudo</label>
-                                    <input type="text" class="form-control" id="pseudo" th:value="${user.username}">
+                                    <label for="username" class="form-label">Pseudo</label>
+                                    <input type="text" class="form-control" id="username" th:field="*{user.username}" th:value="${user.username}">
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="firstName" class="form-label">Prénom</label>
-                                    <input type="text" class="form-control" id="firstName" th:value="${user.firstName}">
+                                    <input type="text" class="form-control" id="firstName" th:field="*{user.firstName}" th:value="${user.firstName}">
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="phone" class="form-label">Téléphone</label>
-                                    <input type="email" class="form-control" id="phone" th:value="${user.phone}">
+                                    <input type="tel" class="form-control" id="phone" th:field="*{user.phone}" th:value="${user.phone}">
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="postal_code" class="form-label">Code postal</label>
-                                    <input type="email" class="form-control" id="postal_code" th:value="${user.postalCode}">
+                                    <input type="text" class="form-control" id="postal_code" th:field="*{user.postalCode}" th:value="${user.postalCode}" pattern="[0-9]{5}" title="Le code postal doit être composé de 5 chiffres">
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="password" class="form-label">Mot de passe actuel</label>
-                                    <input type="password" class="form-control" id="password" th:value="${user.password}">
+                                    <input type="password" class="form-control" id="password" th:field="*{user.password}" th:value="${user.password}">
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="newPassword" class="form-label">nouveau mot de passe</label>
-                                    <input type="password" class="form-control" id="newPassword" th:value="${user.password}">
+                                    <input type="password" class="form-control" id="newPassword" >
+                                </div>
+                                <div class="mb-3 test">
+                                    <div>Crédits</div>
+                                    <div th:text="${user.credit}"></div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3 test">
                                     <label for="lastName" class="form-label">Nom</label>
-                                    <input type="text" class="form-control" th:value="${user.lastName}" id="lastName" >
+                                    <input type="text" class="form-control" th:field="*{user.lastName}" th:value="${user.lastName}" id="lastName" >
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" th:value="${user.email}">
+                                    <input type="email" class="form-control" id="email" th:field="*{user.email}" th:value="${user.email}">
                                 </div>
-
                                 <div class="mb-3 test">
                                     <label for="street" class="form-label">Rue</label>
-                                    <input type="text" class="form-control" id="street" aria-describedby="roadHelp" th:value="${user.street}">
+                                    <input type="text" class="form-control" id="street" aria-describedby="roadHelp" th:field="*{user.street}" th:value="${user.street}">
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="city" class="form-label">Ville</label>
-                                    <input type="text" class="form-control" id="city" th:value="${user.city}">
-                                </div>
-                                <div class="mb-3 test">
+                                    <input type="text" class="form-control" id="city" th:field="*{user.city}" th:value="${user.city}">
                                 </div>
                                 <div class="mb-3 test">
                                     <label for="confirmationPassword" class="form-label">Confirmation</label>
-                                    <input type="password" class="form-control" id="confirmationPassword" th:value="${user.password}">
+                                    <input type="password" class="form-control" id="confirmationPassword" >
                                 </div>
                             </div>
                         </div>
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button type="button" class="btn btn-primary">Supprmier mon compte</button>
+                        </div>
                     </form>
-                </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <a type="button" th:href="@{/user/update/{userId}(userId=${user.userId})}" class="btn btn-primary">Submit</a>
+
                 </div>
             </div>
         </div>

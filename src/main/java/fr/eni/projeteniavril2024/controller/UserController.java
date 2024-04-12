@@ -31,7 +31,6 @@ public class UserController {
 
     @PostMapping("/update/{userId}")
     public String updateUserById(@PathVariable int userId, @ModelAttribute User updatedUser, Model model) {
-        // Récupérer l'utilisateur à partir de la base de données
         User userToUpdate = userService.getUserById(userId);
 
         userToUpdate.setUsername(updatedUser.getUsername());
@@ -43,7 +42,16 @@ public class UserController {
         userToUpdate.setPostalCode(updatedUser.getPostalCode());
         userToUpdate.setCity(updatedUser.getCity());
         userToUpdate.setPassword(updatedUser.getPassword());
+
         userService.updateUserById(userToUpdate);
+        model.addAttribute("user", userToUpdate);
+        return "redirect:/user/" + userId;
+    }
+
+    @GetMapping("/update/{userId}")
+    public String showUpdateForm(@PathVariable int userId, Model model) {
+        User userToUpdate = userService.getUserById(userId);
+        model.addAttribute("user", userToUpdate);
         return "redirect:/user/" + userId;
     }
 
