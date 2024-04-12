@@ -47,6 +47,7 @@ public class UserDAOImpl implements UserDAO {
                 new UserRowMapper()
         );
     }
+
     @Override
     public User getUserById(int userId) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
@@ -91,13 +92,26 @@ public class UserDAOImpl implements UserDAO {
         namedParameterJdbcTemplate.update(UPDATE_BY_ID, namedParameters);
     }
 
-//    surrement à revoir (en ajoutant une requete avec paramètres)
+    //    surrement à revoir (en ajoutant une requete avec paramètres)
     @Override
     public void createUser(User user) {
         jdbcTemplate.update(
                 CREATE_USER,
-                user.getUsername(), user.getLastName(), user.getFirstName(), user.getEmail(), user.getPhone(), user.getStreet(), user.getPostalCode(), user.getCity(), user.getPassword(), user.getCredit(), user.isAdministrator()
+                user.getUsername(),
+                user.getLastName(),
+                user.getFirstName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getStreet(),
+                user.getPostalCode(),
+                user.getCity(),
+                user.getPassword(),
+                user.getCredit(),
+                user.isAdministrator()
+
+
         );
+        namedParameterJdbcTemplate.update(CREATE_USER, new MapSqlParameterSource());
     }
 
     public static class UserRowMapper implements RowMapper<User> {
