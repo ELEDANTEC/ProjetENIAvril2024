@@ -15,40 +15,37 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfiguration {
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/*").permitAll();
-            auth.requestMatchers(HttpMethod.GET, "/*").hasRole("ADMIN");
-            auth.requestMatchers(HttpMethod.POST, "/*").hasRole("ADMIN");
-            auth.requestMatchers(HttpMethod.GET, "/*").hasRole("MEMBER");
-            auth.requestMatchers(HttpMethod.POST, "/*").hasRole("MEMBER");
-        });
+        http
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .requestMatchers("/", "/auctions", "/signin", "/css/**", "/images/**").permitAll()
+                                .anyRequest().authenticated())
 
-        http.formLogin(form -> {
-            form.loginPage("/login").permitAll();
-            form.defaultSuccessUrl("/test");
-        });
+                .formLogin(form ->
+                        form
+                                .loginPage("/login").permitAll()
+                                .defaultSuccessUrl("/"))
 
-        http.logout(logout ->
-                logout
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/")
-                        .permitAll()
-        );
+                .logout(logout ->
+                        logout
+                                .invalidateHttpSession(true)
+                                .clearAuthentication(true)
+                                .deleteCookies("JSESSIONID")
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/")
+                                .permitAll())
+        ;
 
         return http.build();
     }
 
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
-        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
         String sqlUsername = "SELECT username, password, 1 FROM USERS WHERE username = ?;";
-        String sqlAuthorities = "SELECT username, administrator FROM USERS WHERE username = ?";
+        String sqlAuthorities = "SELECT username, administrator FROM USERS WHERE username = ?;";
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
         jdbcUserDetailsManager.setUsersByUsernameQuery(sqlUsername);
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(sqlAuthorities);
 
