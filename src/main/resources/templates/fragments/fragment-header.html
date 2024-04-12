@@ -31,7 +31,8 @@
         </li>
         <li class="nav-item">
             <a
-                    th:href="@{/profile}"
+                    th:if="${userSession != null && userSession.userId > 0}"
+                    th:href="@{'/user/' + ${userSession.userId}}"
                     class="nav-link active"
             >
                 Mon profil

@@ -5,6 +5,8 @@ import fr.eni.projeteniavril2024.bo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.List;
 
@@ -25,16 +27,19 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String getUserById(
+            @ModelAttribute("userSession") User userSession,
             @PathVariable int userId,
             Model model
     ) {
         User user = userService.getUserById(userId);
+
         model.addAttribute("user", user);
         return "profil/my-profil.html";
     }
 
     @PostMapping("/update/{userId}")
     public String updateUserById(
+            @ModelAttribute("userSession") User userSession,
             @PathVariable int userId,
             @ModelAttribute User updatedUser,
             Model model
@@ -55,13 +60,17 @@ public class UserController {
         return "redirect:/user/" + userId;
     }
     @PostMapping("/create")
-    public String createUser(@ModelAttribute User user) {
+    public String createUser(
+            @ModelAttribute("userSession") User userSession,
+            @ModelAttribute User user
+    ) {
         userService.createUser(user);
         return "redirect:/security/login";
     }
 
     @GetMapping("/test/{userId}")
     public String redirectToUpdateProfilePage(
+            @ModelAttribute("userSession") User userSession,
             @PathVariable int userId,
             Model model
     ) {

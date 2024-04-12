@@ -46,7 +46,7 @@
     </form>
 
 <!--    Liste des enchères en cours / enchères filtrées -->
-    <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+    <div id="auctions-div" class="row row-cols-1 row-cols-md-2 g-4 mt-3">
         <div th:each="auction: ${auctions}" class="col">
             <div th:if="${auction.saleStatus == 'En cours'}" class="card shadow border border-black border-3">
                 <div class="row g-0">
@@ -55,15 +55,16 @@
                     </div>
                     <div class="col-md-7 m-3">
                         <div>
-                            <a th:href="@{/auctions/details(auction=${auction.itemId})}">
+                            <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/auctions/details(auction=${auction.itemId})}">
                                 <span th:text="${auction.itemName}"></span>
                             </a>
+                            <span th:unless="${#authorization.expression('isAuthenticated')}" th:text="${auction.itemName}"></span>
                         </div>
                         <div th:if="${auction.bids.size > 0}">
-                            Prix : <span th:text="${auction.bids.get(auction.bids.size() - 1).getBidAmount}"></span>
+                            Enchère actuelle : <span th:text="${auction.bids.get(auction.bids.size() - 1).getBidAmount}"></span>
                         </div>
                         <div th:unless="${auction.bids.size > 0}">
-                            Prix : <span th:text="${auction.initialPrice}"></span>
+                            Prix initial : <span th:text="${auction.initialPrice}"></span>
                         </div>
                         <div>
                             Fin de l'enchère : <span th:text="${auction.endAuctionDate}"></span>
@@ -76,5 +77,6 @@
             </div>
         </div>
     </div>
+    <script th:src="@{/scripts/filters.js}"></script>
 </main>
 </html>
