@@ -38,8 +38,8 @@
                         type="button"
                         id="submit-filters"
                         class="btn btn-primary w-75 h-75"
+                        th:text="'Rechercher'"
                 >
-                    Rechercher
                 </button>
             </div>
         </div>
@@ -47,36 +47,41 @@
 
 <!--    Liste des enchères en cours / enchères filtrées -->
     <div id="auctions-div" class="row row-cols-1 row-cols-md-2 g-4 mt-3">
-        <div th:each="auction: ${auctions}" class="col">
-            <div th:if="${auction.saleStatus == 'En cours'}" class="card shadow border border-black border-3">
+        <div th:each="auction: ${auctions}" th:if="${auction.saleStatus == 'En cours'}" class="col">
+            <div class="card shadow border border-black border-3">
                 <div class="row g-0">
                     <div class="col-md-3 m-3">
-                        <img th:src="@{${'/images/' + auction.itemId + '.png'}}" alt="Image" width="140" height="100"/>
+<!--                        <img th:src="@{${'/images/' + auction.itemId + '.png'}}" alt="Image" width="140" height="100"/>-->
+                        <img th:src="@{/images/default.png}" alt="Image" width="100" height="100"/>
                     </div>
                     <div class="col-md-7 m-3">
-                        <div>
+                        <div class="text-decoration-underline">
                             <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/auctions/details(auction=${auction.itemId})}">
                                 <span th:text="${auction.itemName}"></span>
                             </a>
                             <span th:unless="${#authorization.expression('isAuthenticated')}" th:text="${auction.itemName}"></span>
                         </div>
                         <div th:if="${auction.bids.size > 0}">
-                            Enchère actuelle : <span th:text="${auction.bids.get(auction.bids.size() - 1).getBidAmount}"></span>
+                            <span th:text="${'Enchère actuelle : ' + auction.bids.get(auction.bids.size() - 1).getBidAmount + ' points'}"></span>
                         </div>
                         <div th:unless="${auction.bids.size > 0}">
-                            Prix initial : <span th:text="${auction.initialPrice}"></span>
+                            <span th:text="${'Prix initial : ' + auction.initialPrice + ' points'}"></span>
                         </div>
                         <div>
-                            Fin de l'enchère : <span th:text="${auction.endAuctionDate}"></span>
+                            <span th:text="${'Fin de l''enchère : ' + #temporals.format(auction.endAuctionDate, 'dd/MM/yyyy')}"></span>
                         </div>
                         <div>
-                            Vendeur : <span th:text="${auction.user.username}"></span>
+                            <span th:text="${'Vendeur : ' + auction.user.username}"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        let auctions = /*[[${auctions}]]*/ [];
+        let isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
+    </script>
     <script th:src="@{/scripts/filters.js}"></script>
 </main>
 </html>
