@@ -1,5 +1,7 @@
 package fr.eni.projeteniavril2024.bo;
 
+import org.springframework.core.style.ToStringCreator;
+
 import java.util.List;
 
 /**
@@ -186,5 +188,26 @@ public class User {
 
     public void removeBidPlaced(Bid bidPlaced) {
         this.bidsPlaced.remove(bidPlaced);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", password='" + password + '\'' +
+                ", credit=" + credit +
+                ", administrator=" + administrator +
+                ", itemsSold=" + itemsSold +
+                ", itemsPurchased=" + itemsPurchased +
+                ", bidsPlaced=" + bidsPlaced +
+                '}';
     }
 }

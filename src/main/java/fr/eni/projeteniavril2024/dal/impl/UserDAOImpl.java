@@ -19,7 +19,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_BY_USERNAME = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM USERS WHERE username = :username;";
     private static final String UPDATE_BY_ID = "UPDATE USERS SET " + "username = :username, " + "last_name = :last_name, " + "first_name = :first_name, " + "email = :email, " + "phone = :phone, " + "street = :street, " + "postal_code = :postal_code, " + "city = :city, " + "password = :password " + "WHERE user_id = :user_id;";
     private static final String SELECT_ALL_USERS = "SELECT * FROM USERS";
-    private static final String CREATE_USER = "INSERT INTO USERS (username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator) VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password, :credit, :administrator);";
+    private static final String CREATE_USER = "INSERT INTO USERS (username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator) VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password, :credit, false);";
 
 
     private final JdbcTemplate jdbcTemplate;
@@ -92,13 +92,14 @@ public class UserDAOImpl implements UserDAO {
         namedParameterJdbcTemplate.update(UPDATE_BY_ID, namedParameters);
     }
 
-    //    surrement à revoir (en ajoutant une requete avec paramètres)
     @Override
     public void createUser(User user) {
+                System.out.println("1");
+        System.out.println(user);
                 MapSqlParameterSource namedParameters = new MapSqlParameterSource();
                 namedParameters.addValue("username", user.getUsername());
-                namedParameters.addValue("lastname", user.getLastName());
-                namedParameters.addValue("firstname", user.getFirstName());
+                namedParameters.addValue("last_name", user.getLastName());
+                namedParameters.addValue("first_name", user.getFirstName());
                 namedParameters.addValue("email", user.getEmail());
                 namedParameters.addValue("phone", user.getPhone());
                 namedParameters.addValue("street", user.getStreet());
@@ -106,8 +107,9 @@ public class UserDAOImpl implements UserDAO {
                 namedParameters.addValue("city", user.getCity());
                 namedParameters.addValue("password", user.getPassword());
                 namedParameters.addValue("credit", user.getCredit());
-
+                System.out.println("2");
         namedParameterJdbcTemplate.update(CREATE_USER, namedParameters);
+                System.out.println("3");
     }
 
     public static class UserRowMapper implements RowMapper<User> {
