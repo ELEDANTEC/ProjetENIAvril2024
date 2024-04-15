@@ -44,7 +44,7 @@ public class LoginController {
         userSession.setCredit(user.getCredit());
         userSession.setAdministrator(user.isAdministrator());
 
-        return "redirect:/";
+        return "redirect:/auctions";
     }
 
     @ModelAttribute("userSession")

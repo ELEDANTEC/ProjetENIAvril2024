@@ -31,7 +31,6 @@ if (isAuthenticated) {
 function filterAuctions() {
     let filters = document.getElementById('search-filters').value;
     let selectedCategory = parseInt(document.getElementById('select-category').value);
-    let auctionsChecked = (isAuthenticated ? document.getElementById('radio-auctions').checked : false);
     let myAuctionsChecked = (isAuthenticated ? document.getElementById('radio-my-auctions').checked : false);
     let auctionsCheckboxes = (isAuthenticated
         ?
@@ -56,19 +55,7 @@ function filterAuctions() {
     let saleStatus = [];
 
     // Initialisation du status de vente sélectionné
-    if (!isAuthenticated) {
-        saleStatus.push('En cours');
-    } else if (auctionsChecked) {
-        if (auctionsCheckboxes.openAuctions) {
-            saleStatus.push('En cours');
-        }
-        if (auctionsCheckboxes.myCurrentBids) {
-            saleStatus.push('En cours');
-        }
-        if (auctionsCheckboxes.myWinningBids) {
-            saleStatus.push('Enchères terminées');
-        }
-    } else if (myAuctionsChecked) {
+    if (myAuctionsChecked) {
         if (myAuctionsCheckboxes.myOpenAuctions) {
             saleStatus.push('En cours');
         }
@@ -84,17 +71,36 @@ function filterAuctions() {
     let filteredAuctions = auctions.filter(function (obj) {
         let keepAuction = false;
 
-        // if (obj.saleStatus === saleStatus) {
         if (
-            saleStatus.includes(obj.saleStatus) && (
-                !isAuthenticated || (
-                    (
-                        myAuctionsChecked && obj.user.userId === userSession.userId
-                    ) || (
-                        auctionsCheckboxes.myCurrentBids && obj.birds.find(bid => bid.userId === userSession.userId)
-                    ) || (
-                        auctionsCheckboxes.myWinningBids && obj.birds[obj.birds.length - 1].userId === userSession.userId
-                    ) || auctionsCheckboxes.openAuctions
+            !isAuthenticated && 'En cours'.includes(obj.saleStatus)
+            || ((
+                    myAuctionsChecked
+                    &&
+                    obj.user.userId === userSession.userId
+                    &&
+                    saleStatus.includes(obj.saleStatus)
+                ) || (
+                    auctionsCheckboxes.myCurrentBids
+                    &&
+                    obj.bids.find(bid => bid.userId === userSession.userId)
+                    &&
+                    'En cours'.includes(obj.saleStatus)
+                ) || (
+                    auctionsCheckboxes.myWinningBids
+                    &&
+// if (obj.bids && obj.bids.length > 0) {
+//     let lastBid = obj.bids[obj.bids.length - 1];
+//     console.log(lastBid.userId); // Affiche l'ID de l'utilisateur du dernier élément du tableau bids
+// } else {
+//     console.log("Le tableau bids est vide.");
+// }
+                    obj.bids[obj.bids.length - 1].userId === userSession.userId
+                    &&
+                    'Enchères terminées'.includes(obj.saleStatus)
+                ) || (
+                    auctionsCheckboxes.openAuctions
+                    &&
+                    'En cours'.includes(obj.saleStatus)
                 )
             )
         ) {

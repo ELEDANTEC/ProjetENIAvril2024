@@ -25,16 +25,11 @@ public class AuctionController {
 
     @GetMapping("/auctions")
     public String displayAuctions(
-            WebRequest request,
             Model model
     ) {
-        User userSession = (User) request.getAttribute("userSession", RequestAttributes.SCOPE_SESSION);
         List<SoldItem> auctions = auctionService.getAuctions();
         List<Category> categories = auctionService.getCategories();
 
-        if(userSession != null && userSession.getUserId() > 0) {
-            model.addAttribute("userSession", userSession);
-        }
         model.addAttribute("auctions", auctions);
         model.addAttribute("categories", categories);
         return "index.html";
