@@ -8,12 +8,12 @@
         )}"
 >
 <head>
-    <title>register</title>
+    <title>Inscription</title>
 </head>
 <main class="main-content">
-    <div class="container">
-        <h1 class="text-start">ENI-Enchères</h1>
-        <h2 class="text-center my-4">Mon Profil</h2>
+    <div class="container container-my-profil">
+        <h1 class="text-start title">ENI-Enchères</h1>
+        <h2 class="text-center my-4">Inscription</h2>
         <form th:action="@{/user/create}" method="post">
             <div class="row">
                 <div class="col">
@@ -41,7 +41,7 @@
                 <div class="col">
                     <div class="mb-3">
                         <label for="lastName" class="form-label">Nom de famille</label>
-                        <input th:field="*{user.lastname}" type="text" class="form-control" id="lastName" name="lastName" required>
+                        <input th:field="*{user.lastName}" type="text" class="form-control" id="lastName" name="lastName" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
@@ -57,11 +57,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirmation du mot de passe</label>
-                        <input th:field="*{user.password}" type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                    </div>
+                        <input th:field="*{user.password}" type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>                    </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary me-2">Créer</button>
+            <button type="submit" class="btn btn-primary my-1">Créer</button>
             <button type="reset" class="btn btn-secondary">Annuler</button>
         </form>
     </div>

@@ -35,5 +35,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(User user) {
         userDAO.createUser(user);
+        /*return false;*/
     }
 }
