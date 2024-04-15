@@ -21,7 +21,7 @@ public class AppSecurityConfiguration {
         http
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/", "/auctions", "/signin", "/css/**", "/images/**").permitAll()
+                                .requestMatchers("/", "/auctions", "/register", "/css/**", "/images/**", "/scripts/**").permitAll()
                                 .anyRequest().authenticated())
 
                 .formLogin(form ->
