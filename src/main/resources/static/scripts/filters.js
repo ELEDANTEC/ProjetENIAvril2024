@@ -1,14 +1,103 @@
 let nodeBtnSubmitFilters = document.querySelector("#submit-filters");
 nodeBtnSubmitFilters.addEventListener("click", filterAuctions);
 
+let radioAuctions = null;
+let radioMyAuctions = null;
+
+if (isAuthenticated) {
+    radioAuctions = document.querySelector("#radio-auctions");
+    radioAuctions.addEventListener("click",  function () {
+        document.querySelectorAll('input[name="auctions"]')
+        .forEach((elem) => elem.disabled = false);
+        document.querySelectorAll('input[name="my-auctions"]')
+            .forEach((elem) => {
+                elem.checked = false;
+                elem.disabled = true;
+            });
+    });
+
+    radioMyAuctions = document.querySelector("#radio-my-auctions");
+    radioMyAuctions.addEventListener("click",  function () {
+        document.querySelectorAll('input[name="my-auctions"]')
+            .forEach((elem) => elem.disabled = false);
+        document.querySelectorAll('input[name="auctions"]')
+            .forEach((elem) => {
+                elem.checked = false;
+                elem.disabled = true;
+            });
+    });
+}
+
 function filterAuctions() {
     let filters = document.getElementById('search-filters').value;
     let selectedCategory = parseInt(document.getElementById('select-category').value);
-    let newDivContent = ``;
+    let auctionsChecked = (isAuthenticated ? document.getElementById('radio-auctions').checked : false);
+    let myAuctionsChecked = (isAuthenticated ? document.getElementById('radio-my-auctions').checked : false);
+    let auctionsCheckboxes = (isAuthenticated
+        ?
+            {
+                openAuctions: document.getElementById('open-auctions').checked,
+                myCurrentBids: document.getElementById('my-current-bids').checked,
+                myWinningBids: document.getElementById('my-winning-bids').checked
+            }
+        :
+            null
+    );
+    let myAuctionsCheckboxes = (isAuthenticated
+        ?
+            {
+                myOpenAuctions: document.getElementById('my-open-auctions').checked,
+                myNotStartedAuctions: document.getElementById('my-not-started-auctions').checked,
+                myEndedAuctions: document.getElementById('my-ended-auctions').checked
+            }
+        :
+            null
+    );
+    let saleStatus = [];
 
+    // Initialisation du status de vente sélectionné
+    if (!isAuthenticated) {
+        saleStatus.push('En cours');
+    } else if (auctionsChecked) {
+        if (auctionsCheckboxes.openAuctions) {
+            saleStatus.push('En cours');
+        }
+        if (auctionsCheckboxes.myCurrentBids) {
+            saleStatus.push('En cours');
+        }
+        if (auctionsCheckboxes.myWinningBids) {
+            saleStatus.push('Enchères terminées');
+        }
+    } else if (myAuctionsChecked) {
+        if (myAuctionsCheckboxes.myOpenAuctions) {
+            saleStatus.push('En cours');
+        }
+        if (myAuctionsCheckboxes.myNotStartedAuctions) {
+            saleStatus.push('Créée');
+        }
+        if (myAuctionsCheckboxes.myEndedAuctions) {
+            saleStatus.push('Enchères terminées');
+        }
+    }
+
+    // Applications des filtres
     let filteredAuctions = auctions.filter(function (obj) {
         let keepAuction = false;
-        if (obj.saleStatus === 'En cours') {
+
+        // if (obj.saleStatus === saleStatus) {
+        if (
+            saleStatus.includes(obj.saleStatus) && (
+                !isAuthenticated || (
+                    (
+                        myAuctionsChecked && obj.user.userId === userSession.userId
+                    ) || (
+                        auctionsCheckboxes.myCurrentBids && obj.birds.find(bid => bid.userId === userSession.userId)
+                    ) || (
+                        auctionsCheckboxes.myWinningBids && obj.birds[obj.birds.length - 1].userId === userSession.userId
+                    ) || auctionsCheckboxes.openAuctions
+                )
+            )
+        ) {
             if (selectedCategory !== 0 && filters !== "") {
                 keepAuction = obj.itemName.toLowerCase().includes(filters.toLowerCase()) && obj.category.categoryId === selectedCategory;
             } else if (selectedCategory !== 0) {
@@ -21,6 +110,9 @@ function filterAuctions() {
         }
         return keepAuction;
     });
+
+    // Affichage des ventes filtrées
+    let newDivContent = ``;
 
     filteredAuctions.forEach((auction) => {
         const date = new Date(auction.endAuctionDate);
@@ -37,7 +129,7 @@ function filterAuctions() {
         newDivContent += `<img src="/images/default.png" alt="Image" width="100" height="100"/>`;
         newDivContent += `</div>`;
         newDivContent += `<div class="col-md-7 m-3">`;
-        newDivContent += `<div>`;
+        newDivContent += `<div class="text-decoration-underline">`;
         if (isAuthenticated) {
             newDivContent += `<a href="/auctions/details(auction=` + auction.itemId + `)">`;
             newDivContent += `<span>` + auction.itemName + `</span>`;
@@ -48,11 +140,11 @@ function filterAuctions() {
         newDivContent += `</div>`;
         if (auction.bids.length > 0) {
             newDivContent += `<div>`;
-            newDivContent += `Enchère actuelle : <span>` + auction.bids.at(auction.bids.length - 1).bidAmount + `</span>`;
+            newDivContent += `Enchère actuelle : <span>` + auction.bids.at(auction.bids.length - 1).bidAmount + ` points</span>`;
             newDivContent += `</div>`;
         } else {
             newDivContent += `<div>`;
-            newDivContent += `Prix initial : <span>` + auction.initialPrice + `</span>`;
+            newDivContent += `Prix initial : <span>` + auction.initialPrice + ` points</span>`;
             newDivContent += `</div>`;
         }
         newDivContent += `<div>`;

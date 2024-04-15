@@ -18,12 +18,12 @@
         Filtres :
     </div>
     <form>
-        <div class="row g-4">
+        <div class="row">
             <div class="col">
-                <div>
-                    <input type="search" id="search-filters" class="w-75" placeholder="Le nom de l'article contient">
-                </div>
-                <div class="mt-3">
+                <div class="row">
+                    <div>
+                        <input type="search" id="search-filters" class="w-75" placeholder="Le nom de l'article contient">
+                    </div>
                     <label for="select-category">Catégorie :</label>
                     <select id="select-category" class="form-select w-75">
                         <option value=0 selected="selected">
@@ -31,6 +31,98 @@
                         </option>
                         <option th:each="category: ${categories}" th:value="${category.categoryId}" th:text="${category.label}"> </option>
                     </select>
+                </div>
+<!--                <div class="row">-->
+                <div th:if="${#authorization.expression('isAuthenticated')}" class="row">
+                    <div class="col">
+                        <div>
+                            <input
+                                    type="radio"
+                                    name="radio-filters"
+                                    id="radio-auctions"
+                                    checked="checked"
+                            />
+                            <label for="radio-auctions">
+                                Achats
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="auctions"
+                                    id="open-auctions"
+                                    checked="checked"
+                            />
+                            <label for="open-auctions">
+                                enchères ouvertes
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="auctions"
+                                    id="my-current-bids"
+                            />
+                            <label for="my-current-bids">
+                                mes enchères en cours
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="auctions"
+                                    id="my-winning-bids"
+                            />
+                            <label for="my-winning-bids">
+                                mes enchères remportées
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>
+                            <input
+                                    type="radio"
+                                    name="radio-filters"
+                                    id="radio-my-auctions"
+                            />
+                            <label for="radio-my-auctions">
+                                Mes ventes
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="my-auctions"
+                                    id="my-open-auctions"
+                                    disabled
+                            />
+                            <label for="my-open-auctions">
+                                mes ventes en cours
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="my-auctions"
+                                    id="my-not-started-auctions"
+                                    disabled
+                            />
+                            <label for="my-not-started-auctions">
+                                ventes non débutées
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="my-auctions"
+                                    id="my-ended-auctions"
+                                    disabled
+                            />
+                            <label for="my-ended-auctions">
+                                ventes terminées
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col">
@@ -78,10 +170,13 @@
             </div>
         </div>
     </div>
+
     <script th:inline="javascript">
         let auctions = /*[[${auctions}]]*/ [];
         let isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
+        let userSession = [[${userSession}]];
     </script>
     <script th:src="@{/scripts/filters.js}"></script>
+
 </main>
 </html>
