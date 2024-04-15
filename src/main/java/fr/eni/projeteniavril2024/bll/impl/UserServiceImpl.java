@@ -3,18 +3,18 @@ package fr.eni.projeteniavril2024.bll.impl;
 import fr.eni.projeteniavril2024.bll.UserService;
 import fr.eni.projeteniavril2024.bo.User;
 import fr.eni.projeteniavril2024.dal.UserDAO;
-import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
-@Primary
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
+    private final PasswordEncoder passwordEncoder;
 
-    UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) {
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         userDAO.createUser(user);
-        /*return false;*/
     }
 }
