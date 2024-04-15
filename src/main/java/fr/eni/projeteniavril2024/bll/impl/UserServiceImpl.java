@@ -38,4 +38,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encoder.encode(user.getPassword()));
         userDAO.saveUser(user);
     }
+
+    public void deleteUserById(int userId) {
+        userDAO.deleteUserById(userId);
+    }
 }

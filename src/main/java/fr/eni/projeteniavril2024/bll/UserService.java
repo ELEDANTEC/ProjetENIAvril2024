@@ -15,4 +15,6 @@ public interface UserService {
     void updateUser(User user);
 
     void saveUser(User user);
+
+    void deleteUserById(int userId);
 }

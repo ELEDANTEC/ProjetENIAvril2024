@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -33,6 +32,7 @@ public class UserDAOImpl implements UserDAO {
             + "password) "
             + "VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password)";
     private final static String SELECT_ALL_USERS = "SELECT * FROM Users;";
+    private final static String DELETE_USER ="DELETE FROM users WHERE user_id = :userId";
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -102,6 +102,15 @@ public class UserDAOImpl implements UserDAO {
         params.put("user_id", user.getUserId());  // Assurez-vous que votre objet User a un attribut userId
 
         namedParameterJdbcTemplate.update(UPDATE_BY_ID, params);
+    }
+
+    @Override
+    public void deleteUserById(int userId) {
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userId", userId);
+
+        namedParameterJdbcTemplate.update(DELETE_USER, paramMap);
     }
 
 

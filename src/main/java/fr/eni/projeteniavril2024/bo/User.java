@@ -204,4 +204,15 @@ public class User {
     public void removeBidPlaced(Bid bidPlaced) {
         this.bidsPlaced.remove(bidPlaced);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
