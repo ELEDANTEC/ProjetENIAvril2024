@@ -28,6 +28,11 @@ if (isAuthenticated) {
     });
 }
 
+/**
+ * filters sales according to user selection
+ *
+ * @return void
+ */
 function filterAuctions() {
     let filters = document.getElementById('search-filters').value;
     let selectedCategory = parseInt(document.getElementById('select-category').value);
@@ -70,37 +75,46 @@ function filterAuctions() {
     // Applications des filtres
     let filteredAuctions = auctions.filter(function (obj) {
         let keepAuction = false;
+        let lastBidIsMine = false;
+        if (
+            isAuthenticated
+            &&
+            obj.bids
+            &&
+            obj.bids.length > 0
+        ) {
+            lastBidIsMine = obj.bids[obj.bids.length - 1].userId === userSession.userId;
+        }
 
         if (
             !isAuthenticated && 'En cours'.includes(obj.saleStatus)
-            || ((
-                    myAuctionsChecked
-                    &&
-                    obj.user.userId === userSession.userId
-                    &&
-                    saleStatus.includes(obj.saleStatus)
-                ) || (
-                    auctionsCheckboxes.myCurrentBids
-                    &&
-                    obj.bids.find(bid => bid.userId === userSession.userId)
-                    &&
-                    'En cours'.includes(obj.saleStatus)
-                ) || (
-                    auctionsCheckboxes.myWinningBids
-                    &&
-// if (obj.bids && obj.bids.length > 0) {
-//     let lastBid = obj.bids[obj.bids.length - 1];
-//     console.log(lastBid.userId); // Affiche l'ID de l'utilisateur du dernier élément du tableau bids
-// } else {
-//     console.log("Le tableau bids est vide.");
-// }
-                    obj.bids[obj.bids.length - 1].userId === userSession.userId
-                    &&
-                    'Enchères terminées'.includes(obj.saleStatus)
-                ) || (
-                    auctionsCheckboxes.openAuctions
-                    &&
-                    'En cours'.includes(obj.saleStatus)
+            || (
+                isAuthenticated
+                &&
+                (
+                    (
+                        myAuctionsChecked
+                        &&
+                        obj.user.userId === userSession.userId
+                        &&
+                        saleStatus.includes(obj.saleStatus)
+                    ) || (
+                        auctionsCheckboxes.myCurrentBids
+                        &&
+                        obj.bids.find(bid => bid.userId === userSession.userId)
+                        &&
+                        'En cours'.includes(obj.saleStatus)
+                    ) || (
+                        auctionsCheckboxes.myWinningBids
+                        &&
+                        lastBidIsMine
+                        &&
+                        'Enchères terminées'.includes(obj.saleStatus)
+                    ) || (
+                        auctionsCheckboxes.openAuctions
+                        &&
+                        'En cours'.includes(obj.saleStatus)
+                    )
                 )
             )
         ) {
