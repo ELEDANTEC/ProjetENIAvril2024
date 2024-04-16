@@ -15,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/user")
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/update/{userId}")
-    public String updateUserById(@PathVariable int userId, @ModelAttribute User updatedUser, Model model, BindingResult bindingResult) {
+    public String updateUserById(@PathVariable int userId, @ModelAttribute User updatedUser, Model model, BindingResult bindingResult, HttpSession session) {
         User userToUpdate = userService.getUserById(userId);
 
         userToUpdate.setUsername(updatedUser.getUsername());
@@ -65,22 +66,26 @@ public class UserController {
                 && updatedUser.getPassword() != null && encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
                 && updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())) {
             userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
+
+            userService.updateUser(userToUpdate);
+
+            // Supprimer l'utilisateur de la session
+            session.invalidate();
+
+            // Rediriger vers la page de connexion
+            return "redirect:/login";
         } else if (updatedUser.getNewPassword() != null && !updatedUser.getNewPassword().isEmpty()
                 && updatedUser.getConfirmationPassword() != null && !updatedUser.getConfirmationPassword().isEmpty()
-                && !encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())) {
+                && !encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
+                && !Objects.equals(updatedUser.getConfirmationPassword(), updatedUser.getNewPassword())) {
             bindingResult.rejectValue("password", "error.user", "Mot de passe incorrect");
+            model.addAttribute("user", userToUpdate);  // Ajout de l'utilisateur au modèle
             return "profil/update-my-profil";  // Correction du chemin du template
         }
 
         userService.updateUser(userToUpdate);
         model.addAttribute("user", userToUpdate);
-        return "redirect:/user/" + userId;
-    }
 
-    @GetMapping("/update/{userId}")
-    public String showUpdateForm(@PathVariable int userId, Model model, HttpSession session) {
-        User userToUpdate = (User) session.getAttribute("userSession");
-        model.addAttribute("user", userToUpdate);
         return "redirect:/user/" + userId;
     }
 
@@ -93,6 +98,13 @@ public class UserController {
         User user = (User) session.getAttribute("userSession");
         model.addAttribute("user", user);
         return "profil/update-my-profil.html";
+    }
+
+    @GetMapping("/update/{userId}")
+    public String showUpdateForm(@PathVariable int userId, Model model, HttpSession session) {
+        User userToUpdate = (User) session.getAttribute("userSession");
+        model.addAttribute("user", userToUpdate);
+        return "redirect:/user/" + userId;
     }
 
     @PostMapping("/delete/{userId}")
