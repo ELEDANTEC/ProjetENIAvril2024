@@ -11,57 +11,56 @@
     <title>Inscription</title>
 </head>
 <main class="main-content">
-    <div class="container">
-        <h1 class="text-start">ENI-Enchères</h1>
-        <h2 class="text-center my-4">Mon Profil</h2>
-        <form th:action="@{/user}" method="post">
+    <div class="container container-my-profil">
+        <h1 class="text-start title">ENI-Enchères</h1>
+        <h2 class="text-center my-4">Inscription</h2>
+        <form th:action="@{/register}" method="post">
             <div class="row">
                 <div class="col">
                     <div class="mb-3">
-                        <label for="pseudo" class="form-label">Pseudo</label>
-                        <input type="text" class="form-control" id="pseudo" name="pseudo" required>
+                        <label for="username" class="form-label">Pseudo</label>
+                        <input th:field="*{user.username}" type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="mb-3">
                         <label for="firstName" class="form-label">Prénom</label>
-                        <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        <input th:field="*{user.firstName}" type="text" class="form-control" id="firstName" name="firstName" required>
                     </div>
                     <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Numéro de téléphone</label>
-                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber">
+                        <label for="phone" class="form-label">Numéro de téléphone</label>
+                        <input th:field="*{user.phone}" type="text" class="form-control" id="phone" name="phone">
                     </div>
                     <div class="mb-3">
-                        <label for="zipCode" class="form-label">Code postal</label>
-                        <input type="text" class="form-control" id="zipCode" name="zipCode" required>
+                        <label for="postalCode" class="form-label">Code postal</label>
+                        <input th:field="*{user.postalCode}" type="text" class="form-control" id="postalCode" name="postalCode" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input th:field="*{user.password}" type="password" class="form-control" id="password" name="password" required>
                     </div>
                 </div>
                 <div class="col">
                     <div class="mb-3">
                         <label for="lastName" class="form-label">Nom de famille</label>
-                        <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        <input th:field="*{user.lastName}" type="text" class="form-control" id="lastName" name="lastName" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input th:field="*{user.email}" type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="mb-3">
                         <label for="street" class="form-label">Rue</label>
-                        <input type="text" class="form-control" id="street" name="street" required>
+                        <input th:field="*{user.street}" type="text" class="form-control" id="street" name="street" required>
                     </div>
                     <div class="mb-3">
                         <label for="city" class="form-label">Ville</label>
-                        <input type="text" class="form-control" id="city" name="city" required>
+                        <input th:field="*{user.city}" type="text" class="form-control" id="city" name="city" required>
                     </div>
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirmation du mot de passe</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                    </div>
+                        <input th:field="*{user.plainPassword}" type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>                    </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary me-2">Créer</button>
+            <button type="submit" class="btn btn-primary my-1">Créer</button>
             <button type="reset" class="btn btn-secondary">Annuler</button>
         </form>
     </div>
