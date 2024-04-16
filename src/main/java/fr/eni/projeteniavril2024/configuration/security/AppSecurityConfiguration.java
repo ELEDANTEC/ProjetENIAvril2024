@@ -21,13 +21,13 @@ public class AppSecurityConfiguration {
         http
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/", "/auctions", "/register", "/css/**", "/images/**").permitAll()
+                                .requestMatchers("/", "/auctions", "/register", "/css/**", "/images/**", "/scripts/**").permitAll()
                                 .anyRequest().authenticated())
 
                 .formLogin(form ->
                         form
                                 .loginPage("/login").permitAll()
-                                .defaultSuccessUrl("/auctions"))
+                                .defaultSuccessUrl("/session", true))
 
                 .logout(logout ->
                         logout
