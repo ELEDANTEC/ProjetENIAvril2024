@@ -24,7 +24,11 @@
             />
         </div>
         <div class="col">
-            <form action="">
+            <form
+                    th:action="@{/auctions/sell}"
+                    th:method="post"
+                    th:object="${auction}"
+            >
                 <div class="my-2 row">
                     <div class="col-4">
                         <label for="item-name">
@@ -34,9 +38,9 @@
                     <div class="col-8">
                         <input
                                 type="text"
-                                name="item-name"
+                                name="itemName"
                                 id="item-name"
-                                th:field="*{auction.itemName}"
+                                th:field="*{itemName}"
                         />
                     </div>
                 </div>
@@ -48,9 +52,9 @@
                     </div>
                     <div class="col-8">
                         <textarea
-                                name="item-description"
+                                name="description"
                                 id="item-description"
-                                th:field="*{auction.description}"
+                                th:field="*{description}"
                                 rows="2"
                                 cols="25"
                         ></textarea>
@@ -64,17 +68,17 @@
                     </div>
                     <div class="col-8">
                         <select
+                                name="category"
                                 id="item-category"
-                                name="item-category"
                                 class="form-select"
-                                th:field="*{auction.category}"
+                                th:field="*{category}"
                         >
                             <option
                                     th:each="category: ${categoriesSession}"
                                     th:value="${category.categoryId}"
                                     th:text="${category.label}"
                             ></option>
-                        </select>
+                        </select >
                     </div>
                 </div>
                 <div class="my-2 row">
@@ -86,8 +90,8 @@
                     <div class="col-8">
                         <input
                                 type="file"
-                                id="image-upload"
                                 name="uploaded-image"
+                                id="image-upload"
                                 class="form-control-file"
                                 accept="image/png"
                                 disabled
@@ -103,9 +107,9 @@
                     <div class="col-8">
                         <input
                                 type="number"
-                                name="item-initial-price"
+                                name="initialPrice"
                                 id="item-initial-price"
-                                th:field="*{auction.initialPrice}"
+                                th:field="*{initialPrice}"
                         />
                     </div>
                 </div>
@@ -118,9 +122,9 @@
                     <div class="col-8">
                         <input
                                 type="datetime-local"
-                                name="item-start-auction-date"
+                                name="startAuctionDate"
                                 id="item-start-auction-date"
-                                th:field="*{auction.startAuctionDate}"
+                                th:field="*{startAuctionDate}"
                         />
                     </div>
                 </div>
@@ -133,62 +137,62 @@
                     <div class="col-8">
                         <input
                                 type="datetime-local"
-                                name="item-end-auction-date"
+                                name="endAuctionDate"
                                 id="item-end-auction-date"
-                                th:field="*{auction.endAuctionDate}"
+                                th:field="*{endAuctionDate}"
                         />
                     </div>
                 </div>
-                <fieldset class="scheduler-border">
-                    <legend class="scheduler-border">Retrait</legend>
-                    <div class="px-1 py-2">
-                        <div class="my-2 row">
-                            <div class="col-4">
-                                <label for="withdrawal-street">
-                                    Rue :
-                                </label>
-                            </div>
-                            <div class="col-8">
-                                <input
-                                        type="text"
-                                        name="withdrawal-street"
-                                        id="withdrawal-street"
-                                        th:field="*{withdrawal.street}"
-                                />
-                            </div>
-                        </div>
-                        <div class="my-2 row">
-                            <div class="col-4">
-                                <label for="withdrawal-postal-code">
-                                    Code postal :
-                                </label>
-                            </div>
-                            <div class="col-8">
-                                <input
-                                        type="text"
-                                        name="withdrawal-postal-code"
-                                        id="withdrawal-postal-code"
-                                        th:field="*{withdrawal.postalCode}"
-                                />
-                            </div>
-                        </div>
-                        <div class="my-2 row">
-                            <div class="col-4">
-                                <label for="withdrawal-city">
-                                    Ville :
-                                </label>
-                            </div>
-                            <div class="col-8">
-                                <input
-                                        type="text"
-                                        name="withdrawal-city"
-                                        id="withdrawal-city"
-                                        th:field="*{withdrawal.city}"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
+<!--                <fieldset class="scheduler-border">-->
+<!--                    <legend class="scheduler-border">Retrait</legend>-->
+<!--                    <div class="px-1 py-2">-->
+<!--                        <div class="my-2 row">-->
+<!--                            <div class="col-4">-->
+<!--                                <label for="withdrawal-street">-->
+<!--                                    Rue :-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                            <div class="col-8">-->
+<!--                                <input-->
+<!--                                        type="text"-->
+<!--                                        name="withdrawal-street"-->
+<!--                                        id="withdrawal-street"-->
+<!--                                        th:field="*{withdrawal.street}"-->
+<!--                                />-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="my-2 row">-->
+<!--                            <div class="col-4">-->
+<!--                                <label for="withdrawal-postal-code">-->
+<!--                                    Code postal :-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                            <div class="col-8">-->
+<!--                                <input-->
+<!--                                        type="text"-->
+<!--                                        name="withdrawal-postal-code"-->
+<!--                                        id="withdrawal-postal-code"-->
+<!--                                        th:field="*{withdrawal.postalCode}"-->
+<!--                                />-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="my-2 row">-->
+<!--                            <div class="col-4">-->
+<!--                                <label for="withdrawal-city">-->
+<!--                                    Ville :-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                            <div class="col-8">-->
+<!--                                <input-->
+<!--                                        type="text"-->
+<!--                                        name="withdrawal-city"-->
+<!--                                        id="withdrawal-city"-->
+<!--                                        th:field="*{withdrawal.city}"-->
+<!--                                />-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </fieldset>-->
                 <div>
                     <button
                             type="submit"

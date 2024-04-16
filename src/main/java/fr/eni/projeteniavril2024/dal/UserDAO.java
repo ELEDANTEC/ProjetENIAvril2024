@@ -11,5 +11,6 @@ public interface UserDAO {
     User findByUsername(String username);
     void updateUserById(User user);
     void createUser(User user);
+    int existingUser(int userId);
 }
 

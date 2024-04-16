@@ -37,26 +37,24 @@ public class AuctionController {
     }
 
     @GetMapping("/sell")
-    public String getAuctionForm(
-            Model model
-    ) {
+    public String getAuctionForm(Model model) {
         SoldItem auction = new SoldItem();
         Withdrawal withdrawal = new Withdrawal();
 
         model.addAttribute("auction", auction);
         model.addAttribute("withdrawal", withdrawal);
-        return "auctions/create.html";
+        return "auction/create.html";
     }
 
     @PostMapping("/sell")
     public String createAuction(
             @ModelAttribute("userSession") User userSession,
             @Valid @ModelAttribute("auction") SoldItem auction,
-            @Valid @ModelAttribute("withdrawal") Withdrawal withdrawal,
+//            @Valid @ModelAttribute("withdrawal") Withdrawal withdrawal,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            return "auctions/create.html";
+            return "auction/create.html";
         } else {
             try {
                 auction.setSeller(userSession);
@@ -67,7 +65,7 @@ public class AuctionController {
                     ObjectError error = new ObjectError("globalError", key);
                     bindingResult.addError(error);
                 });
-                return "auctions/create.html";
+                return "auction/create.html";
             }
         }
     }

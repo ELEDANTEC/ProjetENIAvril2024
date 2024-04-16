@@ -42,6 +42,8 @@ public class SoldItemDAOImpl implements SoldItemDAO {
             "       (item_name, description, start_auction_date, end_auction_date, initial_price, user_id, category_id) " +
             "   VALUES " +
             "       (:item_name, :description, :start_auction_date, :end_auction_date, :initial_price, :user_id, :category_id);";
+    private static final String SELECT_UNIQUE = "" +
+            "SELECT COUNT(item_id) FROM SOLD_ITEMS WHERE item_name = :item_name AND description = :description AND category_id = :category_id AND user_id = :user_id;";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
@@ -87,6 +89,17 @@ public class SoldItemDAOImpl implements SoldItemDAO {
         Number key = keyHolder.getKey();
 
         return key.intValue();
+    }
+
+    @Override
+    public int uniqueSoldItem(SoldItem soldItem) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_name", soldItem.getItemName());
+        namedParameters.addValue("description", soldItem.getDescription());
+        namedParameters.addValue("category_id", soldItem.getCategory().getCategoryId());
+        namedParameters.addValue("user_id", soldItem.getSeller().getUserId());
+
+        return namedParameterJdbcTemplate.queryForObject(SELECT_UNIQUE, namedParameters, Integer.class);
     }
 
     public static class SoldItemRowMapper implements RowMapper<SoldItem> {

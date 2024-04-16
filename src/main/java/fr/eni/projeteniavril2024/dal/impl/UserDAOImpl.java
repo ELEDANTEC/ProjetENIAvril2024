@@ -20,6 +20,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String UPDATE_BY_ID = "UPDATE USERS SET " + "username = :username, " + "last_name = :last_name, " + "first_name = :first_name, " + "email = :email, " + "phone = :phone, " + "street = :street, " + "postal_code = :postal_code, " + "city = :city, " + "password = :password " + "WHERE user_id = :user_id;";
     private static final String SELECT_ALL_USERS = "SELECT * FROM USERS";
     private static final String CREATE_USER = "INSERT INTO USERS (username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator) VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password, :credit, false);";
+    private static final String SELECT_EXISTING = "SELECT COUNT(user_id) FROM USERS WHERE user_id = :user_id;";
 
 
     private final JdbcTemplate jdbcTemplate;
@@ -106,6 +107,14 @@ public class UserDAOImpl implements UserDAO {
                 namedParameters.addValue("password", user.getPassword());
                 namedParameters.addValue("credit", user.getCredit());
                 namedParameterJdbcTemplate.update(CREATE_USER, namedParameters);
+    }
+
+    @Override
+    public int existingUser(int userId) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("user_id", userId);
+
+        return namedParameterJdbcTemplate.queryForObject(SELECT_EXISTING, namedParameters, Integer.class);
     }
 
     public static class UserRowMapper implements RowMapper<User> {
