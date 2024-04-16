@@ -4,9 +4,13 @@
         th:replace="~{layouts/layout :: layout(
             pageContent=~{:: .main-content},
             pageTitle=~{:: title},
-            additionalCss=~{}
+            additionalCss=~{::fragment-css}
         )}"
 >
+
+<div th:fragment="fragment-css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</div>
 
 <title>Nouvelle vente</title>
 
@@ -14,93 +18,194 @@
     <h1 class="text-center">Nouvelle vente</h1>
     <div class="row">
         <div class="col">
-<!--            <img th:src="@{${'/images/' + auction.itemId + '.png'}}" alt="Image" width="140" height="100"/>-->
-            <img th:src="@{/images/default.png}" alt="Image" width="250" height="200"/>
+            <img
+                    th:src="@{${'/images/' + auction.itemId + '.png'}}"
+                    th:onerror="|this.src='@{/images/default.png}';this.onerror=null;|" width="400" height="400"
+            />
         </div>
         <div class="col">
             <form action="">
-                <div>
-                    <label for="item-name">
-                        Article :
-                    </label>
-                    <input
-                            type="text"
-                            name="item-name"
-                            id="item-name"
-                            th:field="*{auction.itemName}"
-                    />
-                </div>
-                <div>
-                    <label for="item-description">
-                        Article :
-                    </label>
-                    <textarea
-                            name="item-description"
-                            id="item-description"
-                            th:field="*{auction.description}"
-                    ></textarea>
-                </div>
-                <div>
-                    <label for="item-category">
-                        Catégorie :
-                    </label>
-                    <select
-                            id="item-category"
-                            name="item-category"
-                            th:field="*{auction.category}"
-                    >
-                        <option
-                                th:each="category: ${categories}"
-                                th:value="${category.categoryId}"
-                                th:text="${category.label}"
-                        ></option>
-                    </select>
-                </div>
-                <div>
-                    <label for="item-initial-price">
-                        Mise à prix :
-                    </label>
-                    <input
-                            type="number"
-                            name="item-initial-price"
-                            id="item-initial-price"
-                            th:field="*{auction.initialPrice}"
-                    />
-                </div>
-                <div>
-                    <label for="item-start-auction-date">
-                        Début de l'enchère :
-                    </label>
-                    <input
-                            type="datetime-local"
-                            name="item-start-auction-date"
-                            id="item-start-auction-date"
-                            th:field="*{auction.startAuctionDate}"
-                    />
-                </div>
-                <div>
-                    <label for="item-end-auction-date">
-                        Fin de l'enchère :
-                    </label>
-                    <input
-                            type="datetime-local"
-                            name="item-end-auction-date"
-                            id="item-end-auction-date"
-                            th:field="*{auction.endAuctionDate}"
-                    />
-                </div>
-                <div class="border border-black border-3">
-                    <div>
-                        <label for="withdrawal-street">
-                            Fin de l'enchère :
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="item-name">
+                            Article :
                         </label>
+                    </div>
+                    <div class="col-8">
                         <input
-                                type="datetime-local"
-                                name="withdrawal-street"
-                                id="withdrawal-street"
-                                th:field="*{withdrawal.street}"
+                                type="text"
+                                name="item-name"
+                                id="item-name"
+                                th:field="*{auction.itemName}"
                         />
                     </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="item-description">
+                            Description :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <textarea
+                                name="item-description"
+                                id="item-description"
+                                th:field="*{auction.description}"
+                                rows="2"
+                                cols="25"
+                        ></textarea>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="item-category">
+                            Catégorie :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <select
+                                id="item-category"
+                                name="item-category"
+                                class="form-select"
+                                th:field="*{auction.category}"
+                        >
+                            <option
+                                    th:each="category: ${categoriesSession}"
+                                    th:value="${category.categoryId}"
+                                    th:text="${category.label}"
+                            ></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="image-upload">
+                            Photo de l'article :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <input
+                                type="file"
+                                id="image-upload"
+                                name="uploaded-image"
+                                class="form-control-file"
+                                accept="image/png"
+                                disabled
+                        >
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="item-initial-price">
+                            Mise à prix :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <input
+                                type="number"
+                                name="item-initial-price"
+                                id="item-initial-price"
+                                th:field="*{auction.initialPrice}"
+                        />
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="item-start-auction-date">
+                            Début de l'enchère :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <input
+                                type="datetime-local"
+                                name="item-start-auction-date"
+                                id="item-start-auction-date"
+                                th:field="*{auction.startAuctionDate}"
+                        />
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="item-end-auction-date">
+                            Fin de l'enchère :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <input
+                                type="datetime-local"
+                                name="item-end-auction-date"
+                                id="item-end-auction-date"
+                                th:field="*{auction.endAuctionDate}"
+                        />
+                    </div>
+                </div>
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Retrait</legend>
+                    <div class="px-1 py-2">
+                        <div class="my-2 row">
+                            <div class="col-4">
+                                <label for="withdrawal-street">
+                                    Rue :
+                                </label>
+                            </div>
+                            <div class="col-8">
+                                <input
+                                        type="text"
+                                        name="withdrawal-street"
+                                        id="withdrawal-street"
+                                        th:field="*{withdrawal.street}"
+                                />
+                            </div>
+                        </div>
+                        <div class="my-2 row">
+                            <div class="col-4">
+                                <label for="withdrawal-postal-code">
+                                    Code postal :
+                                </label>
+                            </div>
+                            <div class="col-8">
+                                <input
+                                        type="text"
+                                        name="withdrawal-postal-code"
+                                        id="withdrawal-postal-code"
+                                        th:field="*{withdrawal.postalCode}"
+                                />
+                            </div>
+                        </div>
+                        <div class="my-2 row">
+                            <div class="col-4">
+                                <label for="withdrawal-city">
+                                    Ville :
+                                </label>
+                            </div>
+                            <div class="col-8">
+                                <input
+                                        type="text"
+                                        name="withdrawal-city"
+                                        id="withdrawal-city"
+                                        th:field="*{withdrawal.city}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div>
+                    <button
+                            type="submit"
+                            id="submit-create"
+                            class="btn btn-primary w-25"
+                    >
+                        Enregistrer
+                    </button>
+                    <a th:href="@{/auctions}">
+                        <button
+                                type="button"
+                                id="cancel-create"
+                                class="btn btn-danger w-25"
+                        >
+                            Annuler
+                        </button>
+                    </a>
                 </div>
             </form>
         </div>

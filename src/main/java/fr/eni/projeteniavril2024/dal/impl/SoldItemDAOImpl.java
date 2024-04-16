@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -35,6 +37,11 @@ public class SoldItemDAOImpl implements SoldItemDAO {
             "   INNER JOIN USERS AS u " +
             "       ON si.user_id = u.user_id " +
             "WHERE si.item_id = :item_id";
+    private static final String INSERT_INTO = "" +
+            "INSERT INTO SOLD_ITEMS " +
+            "       (item_name, description, start_auction_date, end_auction_date, initial_price, user_id, category_id) " +
+            "   VALUES " +
+            "       (:item_name, :description, :start_auction_date, :end_auction_date, :initial_price, :user_id, :category_id);";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
@@ -63,6 +70,23 @@ public class SoldItemDAOImpl implements SoldItemDAO {
                 namedParameters,
                 new SoldItemRowMapper()
         );
+    }
+
+    @Override
+    public int create(SoldItem soldItem) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_name", soldItem.getItemName());
+        namedParameters.addValue("description", soldItem.getDescription());
+        namedParameters.addValue("start_auction_date", soldItem.getStartAuctionDate());
+        namedParameters.addValue("end_auction_date", soldItem.getEndAuctionDate());
+        namedParameters.addValue("initial_price", soldItem.getInitialPrice());
+        namedParameters.addValue("user_id", soldItem.getSeller().getUserId());
+        namedParameters.addValue("category_id", soldItem.getCategory().getCategoryId());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(INSERT_INTO, namedParameters, keyHolder);
+        Number key = keyHolder.getKey();
+
+        return key.intValue();
     }
 
     public static class SoldItemRowMapper implements RowMapper<SoldItem> {

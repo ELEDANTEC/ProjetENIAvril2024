@@ -30,7 +30,7 @@
                             Toutes
                         </option>
                         <option
-                                th:each="category: ${categories}"
+                                th:each="category: ${categoriesSession}"
                                 th:value="${category.categoryId}"
                                 th:text="${category.label}"
                         ></option>
