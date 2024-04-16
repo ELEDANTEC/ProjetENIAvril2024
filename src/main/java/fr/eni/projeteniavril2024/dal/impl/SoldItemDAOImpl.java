@@ -94,7 +94,7 @@ public class SoldItemDAOImpl implements SoldItemDAO {
             user.setCity(rs.getString("u.city"));
             user.setCredit(rs.getInt("u.credit"));
             user.setAdministrator(rs.getBoolean("u.administrator"));
-            soldItem.setUser(user);
+            soldItem.setSeller(user);
 
             return soldItem;
         }

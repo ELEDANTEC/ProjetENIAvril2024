@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        th:replace="~{layouts/layout :: layout(
+            pageContent=~{:: .main-content},
+            pageTitle=~{:: title},
+            additionalCss=~{}
+        )}"
+>
+
+<title>Nouvelle vente</title>
+
+<main class="main-content">
+    <h1 class="text-center">Nouvelle vente</h1>
+    <div class="row">
+        <div class="col">
+<!--            <img th:src="@{${'/images/' + auction.itemId + '.png'}}" alt="Image" width="140" height="100"/>-->
+            <img th:src="@{/images/default.png}" alt="Image" width="250" height="200"/>
+        </div>
+        <div class="col">
+            <form action="">
+                <div>
+                    <label for="item-name">
+                        Article :
+                    </label>
+                    <input
+                            type="text"
+                            name="item-name"
+                            id="item-name"
+                            th:field="*{auction.itemName}"
+                    />
+                </div>
+                <div>
+                    <label for="item-description">
+                        Article :
+                    </label>
+                    <textarea
+                            name="item-description"
+                            id="item-description"
+                            th:field="*{auction.description}"
+                    ></textarea>
+                </div>
+                <div>
+                    <label for="item-category">
+                        Catégorie :
+                    </label>
+                    <select
+                            id="item-category"
+                            name="item-category"
+                            th:field="*{auction.category}"
+                    >
+                        <option
+                                th:each="category: ${categories}"
+                                th:value="${category.categoryId}"
+                                th:text="${category.label}"
+                        ></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="item-initial-price">
+                        Mise à prix :
+                    </label>
+                    <input
+                            type="number"
+                            name="item-initial-price"
+                            id="item-initial-price"
+                            th:field="*{auction.initialPrice}"
+                    />
+                </div>
+                <div>
+                    <label for="item-start-auction-date">
+                        Début de l'enchère :
+                    </label>
+                    <input
+                            type="datetime-local"
+                            name="item-start-auction-date"
+                            id="item-start-auction-date"
+                            th:field="*{auction.startAuctionDate}"
+                    />
+                </div>
+                <div>
+                    <label for="item-end-auction-date">
+                        Fin de l'enchère :
+                    </label>
+                    <input
+                            type="datetime-local"
+                            name="item-end-auction-date"
+                            id="item-end-auction-date"
+                            th:field="*{auction.endAuctionDate}"
+                    />
+                </div>
+                <div class="border border-black border-3">
+                    <div>
+                        <label for="withdrawal-street">
+                            Fin de l'enchère :
+                        </label>
+                        <input
+                                type="datetime-local"
+                                name="withdrawal-street"
+                                id="withdrawal-street"
+                                th:field="*{withdrawal.street}"
+                        />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</html>

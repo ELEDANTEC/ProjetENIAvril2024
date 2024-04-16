@@ -95,7 +95,7 @@ function filterAuctions() {
                     (
                         myAuctionsChecked
                         &&
-                        obj.user.userId === userSession.userId
+                        obj.seller.userId === userSession.userId
                         &&
                         saleStatus.includes(obj.saleStatus)
                     ) || (
@@ -171,7 +171,7 @@ function filterAuctions() {
         newDivContent += `Fin de l'enchère : <span>` + endAuctionDate + `</span>`;
         newDivContent += `</div>`;
         newDivContent += `<div>`;
-        newDivContent += `Vendeur : <span>` + auction.user.username + `</span>`;
+        newDivContent += `Vendeur : <span>` + auction.seller.username + `</span>`;
         newDivContent += `</div>`;
         newDivContent += `</div>`;
         newDivContent += `</div>`;
