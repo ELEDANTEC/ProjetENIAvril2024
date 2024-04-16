@@ -163,7 +163,7 @@
                             <span th:text="${'Fin de l''enchère : ' + #temporals.format(auction.endAuctionDate, 'dd/MM/yyyy')}"></span>
                         </div>
                         <div>
-                            <span th:text="${'Vendeur : ' + auction.user.username}"></span>
+                            <a th:href="@{'/user/' + auction.user.user_id}" th:text="${'Vendeur : ' + auction.user.username}"></a>
                         </div>
                     </div>
                 </div>

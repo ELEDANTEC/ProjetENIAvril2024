@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -77,8 +78,8 @@ public class UserController {
     }
 
     @GetMapping("/update/{userId}")
-    public String showUpdateForm(@PathVariable int userId, Model model) {
-        User userToUpdate = userService.getUserById(userId);
+    public String showUpdateForm(@PathVariable int userId, Model model, HttpSession session) {
+        User userToUpdate = (User) session.getAttribute("userSession");
         model.addAttribute("user", userToUpdate);
         return "redirect:/user/" + userId;
     }
@@ -86,26 +87,25 @@ public class UserController {
     @GetMapping("/redirect/{userId}")
     public String redirectToUpdateProfilePage(
             @PathVariable int userId,
-            Model model
+            Model model,
+            HttpSession session
     ) {
-        User user = userService.getUserById(userId);
+        User user = (User) session.getAttribute("userSession");
         model.addAttribute("user", user);
         return "profil/update-my-profil.html";
     }
 
-    @GetMapping("/deleteUser/{userId}")
-    public String deleteUser(@PathVariable int userId, HttpSession session) {
-        userService.deleteUserById(userId);
-
-        // Supprimer l'utilisateur de la session
-        session.removeAttribute("userSession");
-
-        return "redirect:/login?deleteSuccess";
-    }
-
     @PostMapping("/delete/{userId}")
-    public String deleteUser(@PathVariable int userId) {
-        userService.deleteUserById(userId);
-        return "redirect:/";
+    public String deleteUser(@PathVariable int userId, HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("userSession");
+        if (user != null && user.getUserId() == userId) {
+            userService.deleteUserById(userId);
+            // Supprimer l'utilisateur de la session
+            session.invalidate();
+            redirectAttributes.addFlashAttribute("message", "Votre compte a été supprimé avec succès.");
+            return "redirect:/login?deleteSuccess";
+        } else {
+            return "redirect:/error"; // ou une autre page de votre choix
+        }
     }
 }

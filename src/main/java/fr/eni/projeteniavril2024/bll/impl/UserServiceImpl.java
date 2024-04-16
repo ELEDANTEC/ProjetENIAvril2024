@@ -11,12 +11,15 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    @Autowired
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private PasswordEncoder encoder;
+    public UserServiceImpl(UserDAO userDAO, PasswordEncoder passwordEncoder) {
+        this.userDAO = userDAO;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public List<User> getAllUsers() {
@@ -41,5 +44,16 @@ public class UserServiceImpl implements UserService {
 
     public void deleteUserById(int userId) {
         userDAO.deleteUserById(userId);
+    }
+
+    @Override
+    public void createUser(User user) {
+//        System.err.println("Object user");
+//        System.out.println(user);
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+//        System.err.println("Hashed password user");
+//        System.out.println(user);
+        userDAO.createUser(user);
     }
 }

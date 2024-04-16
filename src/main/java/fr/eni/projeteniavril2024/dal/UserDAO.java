@@ -14,4 +14,6 @@ public interface UserDAO {
     void deleteUserById(int userId);
 
     void saveUser(User user);
+
+    void createUser(User user);
 }

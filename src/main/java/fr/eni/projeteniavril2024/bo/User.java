@@ -1,5 +1,7 @@
 package fr.eni.projeteniavril2024.bo;
 
+import org.springframework.core.style.ToStringCreator;
+
 import java.util.List;
 
 /**
@@ -18,6 +20,8 @@ public class User {
     private String city;
     private String postalCode;
     private String password;
+    //confirmer le mot de passe, attribut non hashé, non lié en bdd
+    private String plainPassword;
     private int credit;
     private boolean administrator;
     private String newPassword;
@@ -125,6 +129,14 @@ public class User {
         this.password = password;
     }
 
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
+    }
+
     public int getCredit() {
         return credit;
     }
@@ -213,6 +225,12 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", email='" + email + '\'' +
-                '}';
+                ", phone='" + phone + '\'' +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", credit=" + credit +
+                ", administrator=" + administrator +
+                "}";
     }
 }

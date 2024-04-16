@@ -32,7 +32,9 @@ public class UserDAOImpl implements UserDAO {
             + "password) "
             + "VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password)";
     private final static String SELECT_ALL_USERS = "SELECT * FROM Users;";
-    private final static String DELETE_USER ="DELETE FROM users WHERE user_id = :userId";
+    private static final String DELETE_USER = "DELETE FROM USERS WHERE user_id = :userId";
+    private static final String CREATE_USER = "INSERT INTO USERS (username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator) VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password, :credit, false);";
+
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -59,6 +61,7 @@ public class UserDAOImpl implements UserDAO {
                 new UserRowMapper()
         );
     }
+
     @Override
     public User getUserById(int userId) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
@@ -106,11 +109,9 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void deleteUserById(int userId) {
-
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("userId", userId);
-
-        namedParameterJdbcTemplate.update(DELETE_USER, paramMap);
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("userId", userId);
+        namedParameterJdbcTemplate.update(DELETE_USER, namedParameters);
     }
 
 
@@ -128,6 +129,21 @@ public class UserDAOImpl implements UserDAO {
         paramMap.put("password", user.getPassword());
 
         jdbcTemplate.update(INSERT_USER, paramMap);
+    }
+
+    public void createUser(User user) {
+                MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+                namedParameters.addValue("username", user.getUsername());
+                namedParameters.addValue("last_name", user.getLastName());
+                namedParameters.addValue("first_name", user.getFirstName());
+                namedParameters.addValue("email", user.getEmail());
+                namedParameters.addValue("phone", user.getPhone());
+                namedParameters.addValue("street", user.getStreet());
+                namedParameters.addValue("postal_code", user.getPostalCode());
+                namedParameters.addValue("city", user.getCity());
+                namedParameters.addValue("password", user.getPassword());
+                namedParameters.addValue("credit", user.getCredit());
+                namedParameterJdbcTemplate.update(CREATE_USER, namedParameters);
     }
 
     public static class UserRowMapper implements RowMapper<User> {
