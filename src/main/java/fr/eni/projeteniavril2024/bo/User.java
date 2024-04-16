@@ -20,6 +20,8 @@ public class User {
     private String city;
     private String postalCode;
     private String password;
+    //confirmer le mot de passe, attribut non hashé, non lié en bdd
+    private String plainPassword;
     private int credit;
     private boolean administrator;
     
@@ -124,6 +126,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
     }
 
     public int getCredit() {

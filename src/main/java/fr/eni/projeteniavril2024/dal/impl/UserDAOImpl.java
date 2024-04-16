@@ -94,8 +94,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void createUser(User user) {
-                System.out.println("1");
-        System.out.println(user);
                 MapSqlParameterSource namedParameters = new MapSqlParameterSource();
                 namedParameters.addValue("username", user.getUsername());
                 namedParameters.addValue("last_name", user.getLastName());
@@ -107,9 +105,7 @@ public class UserDAOImpl implements UserDAO {
                 namedParameters.addValue("city", user.getCity());
                 namedParameters.addValue("password", user.getPassword());
                 namedParameters.addValue("credit", user.getCredit());
-                System.out.println("2");
-        namedParameterJdbcTemplate.update(CREATE_USER, namedParameters);
-                System.out.println("3");
+                namedParameterJdbcTemplate.update(CREATE_USER, namedParameters);
     }
 
     public static class UserRowMapper implements RowMapper<User> {

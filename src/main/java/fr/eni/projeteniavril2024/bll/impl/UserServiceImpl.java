@@ -34,8 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) {
+//        System.err.println("Object user");
+//        System.out.println(user);
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
+//        System.err.println("Hashed password user");
+//        System.out.println(user);
         userDAO.createUser(user);
     }
 }
