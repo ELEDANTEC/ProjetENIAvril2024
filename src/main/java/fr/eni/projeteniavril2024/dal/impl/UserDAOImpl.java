@@ -2,6 +2,7 @@ package fr.eni.projeteniavril2024.dal.impl;
 
 import fr.eni.projeteniavril2024.bo.User;
 import fr.eni.projeteniavril2024.dal.UserDAO;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -41,12 +42,17 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findByEmail(String email) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("email", email);
-        return namedParameterJdbcTemplate.queryForObject(
-                SELECT_BY_EMAIL,
-                namedParameters,
-                new UserRowMapper()
-        );
+        try {
+            return namedParameterJdbcTemplate.queryForObject(
+                    SELECT_BY_EMAIL,
+                    namedParameters,
+                    new UserRowMapper()
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
 
     @Override
     public User getUserById(int userId) {
@@ -68,12 +74,17 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findByUsername(String username) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("username", username);
-        return namedParameterJdbcTemplate.queryForObject(
-                SELECT_BY_USERNAME,
-                namedParameters,
-                new UserRowMapper()
-        );
+        try {
+            return namedParameterJdbcTemplate.queryForObject(
+                    SELECT_BY_USERNAME,
+                    namedParameters,
+                    new UserRowMapper()
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
 
     @Override
     public void updateUserById(User user) {
