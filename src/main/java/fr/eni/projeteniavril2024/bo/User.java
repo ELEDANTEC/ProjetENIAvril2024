@@ -212,12 +212,8 @@ public class User {
                 ", street='" + street + '\'' +
                 ", city='" + city + '\'' +
                 ", postalCode='" + postalCode + '\'' +
-                ", password='" + password + '\'' +
                 ", credit=" + credit +
                 ", administrator=" + administrator +
-                ", itemsSold=" + itemsSold +
-                ", itemsPurchased=" + itemsPurchased +
-                ", bidsPlaced=" + bidsPlaced +
-                '}';
+                "}";
     }
 }
