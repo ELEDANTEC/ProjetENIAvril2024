@@ -73,7 +73,7 @@ public class UserController {
 
         userService.updateUser(userToUpdate);
         model.addAttribute("user", userToUpdate);
-        return "redirect:/profil/update-my-profil";  // Correction du chemin du template
+        return "redirect:/user/" + userId;
     }
 
     @GetMapping("/update/{userId}")
@@ -102,9 +102,10 @@ public class UserController {
 
         return "redirect:/login?deleteSuccess";
     }
+
     @PostMapping("/delete/{userId}")
     public String deleteUser(@PathVariable int userId) {
         userService.deleteUserById(userId);
-        return "redirect:/";  // Redirige vers la page d'accueil après suppression
+        return "redirect:/";
     }
 }

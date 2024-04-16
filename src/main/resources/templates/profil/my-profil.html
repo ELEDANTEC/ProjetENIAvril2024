@@ -52,7 +52,7 @@
                 </table>
                 </div>
                 <div class="d-grid gap-2 col-2 mx-auto">
-                    <a th:href="@{/user/delete/{userId}(userId=${user.userId})}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?')">Supprimer mon compte</a>
+                    <a th:href="@{/user/redirect/{userId}(userId=${user.userId})}" class="btn btn-primary" type="button">Modifier votre profil</a>
                 </div>
             </div>
         </div>

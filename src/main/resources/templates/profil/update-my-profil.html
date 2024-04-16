@@ -73,12 +73,12 @@
                         <div class="d-grid gap-2 col-6 mx-auto">
                             <button type="submit" class="btn btn-primary">Enregistrer</button>
                         </div>
-                        <div class="d-grid gap-2 col-6 mx-auto">
-                            <form th:action="@{/user/delete/{userId}(userId=${user.userId})}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?')">
-                                <button type="submit" class="btn btn-danger">Supprimer mon compte</button>
-                            </form>
-                        </div>
                     </form>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <form th:action="@{/user/delete/{userId}(userId=${user.userId})}" method="post">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?')">Supprimer mon compte</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

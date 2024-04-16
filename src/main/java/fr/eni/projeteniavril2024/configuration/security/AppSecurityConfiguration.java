@@ -28,7 +28,7 @@ public class AppSecurityConfiguration {
                 .formLogin(form ->
                         form
                                 .loginPage("/login").permitAll()
-                                .defaultSuccessUrl("/", true))
+                                .defaultSuccessUrl("/session", true))
 
                 .logout(logout ->
                         logout

@@ -16,7 +16,7 @@
         <li class="nav-item">
             <a
                     th:href="@{/auctions}"
-                    class="nav-link"
+                    class="nav-link active"
             >
                 Enchères
             </a>
@@ -24,7 +24,7 @@
         <li class="nav-item">
             <a
                     th:href="@{/sell}"
-                    class="nav-link"
+                    class="nav-link active"
             >
                 Vendre un article
             </a>
@@ -33,7 +33,7 @@
             <a
                     th:if="${userSession != null && userSession.userId > 0}"
                     th:href="@{'/user/' + ${userSession.userId}}"
-                    class="nav-link"
+                    class="nav-link active"
             >
                 Mon profil
             </a>
@@ -41,23 +41,17 @@
         <li class="nav-item">
             <a
                     th:href="@{/logout}"
-                    class="nav-link"
+                    class="nav-link active"
             >
                 Déconnexion
             </a>
         </li>
     </ul>
-    <ul
+    <a
             th:unless="${#authorization.expression('isAuthenticated')}"
+            th:href="@{/login}"
             class="nav nav-pills"
     >
-        <li class="nav-item">
-            <a
-                th:href="@{/login}"
-                class="nav-link"
-            >
-                S'inscrire - Se connecter
-            </a>
-        </li>
-    </ul>
+        S'inscrire - Se connecter
+    </a>
 </header>
