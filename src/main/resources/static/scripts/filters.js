@@ -145,8 +145,7 @@ function filterAuctions() {
         newDivContent += `<div class="card shadow border border-black border-3">`;
         newDivContent += `<div class="row g-0">`;
         newDivContent += `<div class="col-md-3 m-3">`;
-        // newDivContent += `<img src="/images/` + auction.itemId + `.png" alt="Image" width="140" height="100"/>`;
-        newDivContent += `<img src="/images/default.png" alt="Image" width="100" height="100"/>`;
+        newDivContent += `<img src="/images/` + auction.itemId + `.png" onError="this.onerror=null;this.src='/images/default.png';" width="100" height="100"/>`;
         newDivContent += `</div>`;
         newDivContent += `<div class="col-md-7 m-3">`;
         newDivContent += `<div class="text-decoration-underline">`;
