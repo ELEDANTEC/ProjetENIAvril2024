@@ -19,4 +19,6 @@ public interface UserService {
     void deleteUserById(int userId);
 
     void createUser(User user);
+
+    boolean isUsernameUnique(String username, int userId);
 }

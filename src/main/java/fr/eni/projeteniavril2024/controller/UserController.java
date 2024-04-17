@@ -20,7 +20,6 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    private final UserService userService;
 
     @Autowired
     private UserService userService;
@@ -53,8 +52,6 @@ public class UserController {
     @PostMapping("/update/{userId}")
     public String updateUserById(@PathVariable int userId, @ModelAttribute User updatedUser, Model model, BindingResult bindingResult, HttpSession session) {
         User userToUpdate = userService.getUserById(userId);
-
-        userToUpdate.setUsername(updatedUser.getUsername());
         userToUpdate.setLastName(updatedUser.getLastName());
         userToUpdate.setFirstName(updatedUser.getFirstName());
         userToUpdate.setEmail(updatedUser.getEmail());
@@ -63,6 +60,46 @@ public class UserController {
         userToUpdate.setPostalCode(updatedUser.getPostalCode());
         userToUpdate.setCity(updatedUser.getCity());
 
+        // Vérification si le nom d'utilisateur est modifié
+        if (!userToUpdate.getUsername().equals(updatedUser.getUsername())) {
+            if (!userService.isUsernameUnique(updatedUser.getUsername(), userId)) {
+                bindingResult.rejectValue("username", "error.user", "Nom d'utilisateur déjà utilisé");
+                model.addAttribute("user", userToUpdate);
+                model.addAttribute("errorMessage", "Nom d'utilisateur déjà utilisé");
+                return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
+            }
+            userToUpdate.setUsername(updatedUser.getUsername());
+
+
+            // Vérification et mise à jour du mot de passe
+            if (updatedUser.getNewPassword() != null && !updatedUser.getNewPassword().isEmpty()
+                    && updatedUser.getConfirmationPassword() != null && !updatedUser.getConfirmationPassword().isEmpty()) {
+
+                if (updatedUser.getPassword() != null && encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
+                        && updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())) {
+                    userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
+                } else if (!encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())) {
+                    bindingResult.rejectValue("password", "error.user", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                    model.addAttribute("user", userToUpdate);
+                    model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                    return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
+                } else if (!Objects.equals(updatedUser.getConfirmationPassword(), updatedUser.getNewPassword())) {
+                    bindingResult.rejectValue("password", "error.user", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                    model.addAttribute("user", userToUpdate);
+                    model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                    return "profil/update-my-profil";
+                }
+                userService.updateUser(userToUpdate);
+
+                session.invalidate();
+
+                return "redirect:/login";
+            }
+
+            userService.updateUser(userToUpdate);
+
+            return "redirect:/logout";
+        }
         // Vérification et mise à jour du mot de passe
         if (updatedUser.getNewPassword() != null && !updatedUser.getNewPassword().isEmpty()
                 && updatedUser.getConfirmationPassword() != null && !updatedUser.getConfirmationPassword().isEmpty()) {
@@ -73,10 +110,12 @@ public class UserController {
             } else if (!encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())) {
                 bindingResult.rejectValue("password", "error.user", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
                 model.addAttribute("user", userToUpdate);
+                model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
                 return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
             } else if (!Objects.equals(updatedUser.getConfirmationPassword(), updatedUser.getNewPassword())) {
-                bindingResult.rejectValue("password", "error.user", "La confirmation du mot de passe ne correspond pas");
+                bindingResult.rejectValue("password", "error.user", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
                 model.addAttribute("user", userToUpdate);
+                model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
                 return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
             }
             userService.updateUser(userToUpdate);
@@ -89,8 +128,8 @@ public class UserController {
         userService.updateUser(userToUpdate);
 
         return "redirect:/session";
-
     }
+
     @GetMapping("/redirect/{userId}")
     public String redirectToUpdateProfilePage(
             @PathVariable int userId,

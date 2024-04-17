@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService {
         userDAO.createUser(user);
     }
 
+    @Override
+    public boolean isUsernameUnique(String username, int userId) {
+        User user = userDAO.findByUsername(username);
+        return user == null || user.getUserId() == userId;
+    }
 
 }
 
