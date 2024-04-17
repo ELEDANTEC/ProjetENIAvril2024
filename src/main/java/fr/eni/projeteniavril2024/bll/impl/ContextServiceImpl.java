@@ -24,6 +24,6 @@ public class ContextServiceImpl implements ContextService {
 
     @Override
     public List<User> loadAll() {
-        return userDAO.getAllUsers();
+        return userDAO.findAll();
     }
 }

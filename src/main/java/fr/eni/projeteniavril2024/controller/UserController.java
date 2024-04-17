@@ -2,20 +2,27 @@ package fr.eni.projeteniavril2024.controller;
 
 import fr.eni.projeteniavril2024.bll.UserService;
 import fr.eni.projeteniavril2024.bo.User;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final PasswordEncoder encoder;
 
-    UserController(UserService userService) {
+    public UserController(
+            UserService userService,
+            PasswordEncoder encoder
+    ) {
+        this.encoder = encoder;
         this.userService = userService;
     }
 
@@ -27,27 +34,26 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String getUserById(
-            @ModelAttribute("userSession") User userSession,
             @PathVariable int userId,
-            Model model
+            Model model,
+            HttpSession session
     ) {
         User user = userService.getUserById(userId);
+        User userSession = (User) session.getAttribute("userSession");
 
         model.addAttribute("user", user);
+        model.addAttribute("userSession", userSession);
         return "profil/my-profil.html";
     }
 
     @PostMapping("/update/{userId}")
     public String updateUserById(
-            @ModelAttribute("userSession") User userSession,
             @PathVariable int userId,
             @ModelAttribute User updatedUser,
-            Model model
+            Model model,
+            HttpSession session
     ) {
-        // Récupérer l'utilisateur à partir de la base de données
         User userToUpdate = userService.getUserById(userId);
-
-        userToUpdate.setUsername(updatedUser.getUsername());
         userToUpdate.setLastName(updatedUser.getLastName());
         userToUpdate.setFirstName(updatedUser.getFirstName());
         userToUpdate.setEmail(updatedUser.getEmail());
@@ -55,27 +61,144 @@ public class UserController {
         userToUpdate.setStreet(updatedUser.getStreet());
         userToUpdate.setPostalCode(updatedUser.getPostalCode());
         userToUpdate.setCity(updatedUser.getCity());
-        userToUpdate.setPassword(updatedUser.getPassword());
-        userService.updateUserById(userToUpdate);
-        return "redirect:/user/" + userId;
-    }
-    @PostMapping("/create")
-    public String createUser(
-            @ModelAttribute("userSession") User userSession,
-            @ModelAttribute User user
-    ) {
-        userService.createUser(user);
-        return "redirect:/security/login";
+
+        // Vérification si le nom d'utilisateur est modifié
+        if (!userToUpdate.getUsername().equals(updatedUser.getUsername())) {
+            if (userService.isUniqueUsername(updatedUser.getUsername()) > 0) {
+                model.addAttribute("user", userToUpdate);
+                model.addAttribute("errorMessage", "Nom d'utilisateur déjà utilisé");
+                return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
+            }
+            userToUpdate.setUsername(updatedUser.getUsername());
+
+            // Vérification et mise à jour du mot de passe
+            if (
+                    updatedUser.getNewPassword() != null
+                    &&
+                    !updatedUser.getNewPassword().isEmpty()
+                    &&
+                    updatedUser.getConfirmationPassword() != null
+                    &&
+                    !updatedUser.getConfirmationPassword().isEmpty()
+            ) {
+                if (
+                        updatedUser.getPassword() != null
+                        &&
+                        encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
+                        &&
+                        updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())
+                ) {
+                    userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
+                } else if (!encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())) {
+                    model.addAttribute("user", userToUpdate);
+                    model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                    return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
+                } else if (!Objects.equals(updatedUser.getConfirmationPassword(), updatedUser.getNewPassword())) {
+                    model.addAttribute("user", userToUpdate);
+                    model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                    return "profil/update-my-profil";
+                }
+                userService.updateUser(userToUpdate);
+
+                session.invalidate();
+
+                return "redirect:/login";
+            }
+
+            userService.updateUser(userToUpdate);
+
+            session.invalidate();
+
+            return "redirect:/login";
+        }
+        if (
+                updatedUser.getNewPassword() != null
+                &&
+                !updatedUser.getNewPassword().isEmpty()
+                &&
+                updatedUser.getConfirmationPassword() != null
+                &&
+                !updatedUser.getConfirmationPassword().isEmpty()
+        ) {
+            if (updatedUser.getPassword() != null && encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
+                    && updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())) {
+                userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
+            } else if (!encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())) {
+                model.addAttribute("user", userToUpdate);
+                model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
+            } else if (!Objects.equals(updatedUser.getConfirmationPassword(), updatedUser.getNewPassword())) {
+                model.addAttribute("user", userToUpdate);
+                model.addAttribute("errorMessage", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
+            }
+            userService.updateUser(userToUpdate);
+            session.invalidate();
+
+            return "redirect:/login";
+        }
+        userService.updateUser(userToUpdate);
+
+        return "redirect:/session";
     }
 
-    @GetMapping("/test/{userId}")
+    @GetMapping("/redirect/{userId}")
     public String redirectToUpdateProfilePage(
-            @ModelAttribute("userSession") User userSession,
             @PathVariable int userId,
-            Model model
+            Model model,
+            HttpSession session
     ) {
-        User user = userService.getUserById(userId);
+        User user = (User) session.getAttribute("userSession");
         model.addAttribute("user", user);
         return "profil/update-my-profil.html";
+    }
+
+    @GetMapping("/update/{userId}")
+    public String showUpdateForm(
+            @PathVariable int userId,
+            Model model,
+            HttpSession session
+    ) {
+        User userToUpdate = (User) session.getAttribute("userSession");
+        model.addAttribute("user", userToUpdate);
+        return "redirect:/user/" + userId;
+    }
+
+    @PostMapping("/delete/{userId}")
+    public String deleteUser(
+            @PathVariable int userId,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+        User user = (User) session.getAttribute("userSession");
+        if (user != null && user.getUserId() == userId) {
+            userService.deleteUserById(userId);
+            // Supprimer l'utilisateur de la session
+            session.invalidate();
+            redirectAttributes.addFlashAttribute("message", "Votre compte a été supprimé avec succès.");
+            return "redirect:/login?deleteSuccess";
+        } else {
+            return "redirect:/error"; // ou une autre page de votre choix
+        }
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(
+            @ModelAttribute User user,
+            Model model
+    ) {
+        try {
+            userService.createUser(user);
+            return "redirect:/security/login";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "register";
+        }
     }
 }

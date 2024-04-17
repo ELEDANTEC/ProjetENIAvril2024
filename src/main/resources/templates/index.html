@@ -169,7 +169,11 @@
                             <span th:text="${'Fin de l''enchère : ' + #temporals.format(auction.endAuctionDate, 'dd/MM/yyyy')}"></span>
                         </div>
                         <div>
-                            <span th:text="${'Vendeur : ' + auction.seller.username}"></span>
+                            <span th:text="${'Vendeur : '}"></span>
+                            <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/user/{userId}(userId=${auction.seller.userId})}">
+                                <span th:text="${auction.seller.username}"></span>
+                            </a>
+                            <span th:unless="${#authorization.expression('isAuthenticated')}" th:text="${auction.seller.username}"></span>
                         </div>
                     </div>
                 </div>

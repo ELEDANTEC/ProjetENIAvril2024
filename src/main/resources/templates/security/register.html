@@ -4,12 +4,17 @@
         th:replace="~{layouts/layout :: layout(
             pageContent=~{:: .main-content},
             pageTitle=~{:: title},
-            additionalCss=~{}
+            additionalCss=~{:: fragment-css}
         )}"
 >
+<div th:fragment="fragment-css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</div>
+
 <head>
     <title>Inscription</title>
 </head>
+
 <main class="main-content">
     <div class="container container-my-profil">
         <h1 class="text-start title">ENI-Enchères</h1>

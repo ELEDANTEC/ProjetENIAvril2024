@@ -170,7 +170,11 @@ function filterAuctions() {
         newDivContent += `Fin de l'enchère : <span>` + endAuctionDate + `</span>`;
         newDivContent += `</div>`;
         newDivContent += `<div>`;
-        newDivContent += `Vendeur : <span>` + auction.seller.username + `</span>`;
+        if (isAuthenticated) {
+            newDivContent += `Vendeur : <a href="/user/` + auction.seller.userId + `"><span>` + auction.seller.username + `</span></a>`;
+        } else {
+            newDivContent += `Vendeur : <span>` + auction.seller.username + `</span>`;
+        }
         newDivContent += `</div>`;
         newDivContent += `</div>`;
         newDivContent += `</div>`;

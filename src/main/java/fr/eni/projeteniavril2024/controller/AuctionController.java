@@ -1,6 +1,5 @@
 package fr.eni.projeteniavril2024.controller;
 
-
 import fr.eni.projeteniavril2024.bll.AuctionService;
 import fr.eni.projeteniavril2024.bo.Category;
 import fr.eni.projeteniavril2024.bo.SoldItem;

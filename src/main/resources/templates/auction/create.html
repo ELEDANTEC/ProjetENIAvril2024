@@ -4,10 +4,9 @@
         th:replace="~{layouts/layout :: layout(
             pageContent=~{:: .main-content},
             pageTitle=~{:: title},
-            additionalCss=~{::fragment-css}
+            additionalCss=~{:: fragment-css}
         )}"
 >
-
 <div th:fragment="fragment-css">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </div>

@@ -9,6 +9,8 @@ import java.util.List;
 public interface UserService {
     List<User> getAllUsers();
     User getUserById(int userId);
-    void updateUserById(User user);
     void createUser(User user);
+    void updateUser(User user);
+    void deleteUserById(int userId);
+    int isUniqueUsername(String username);
 }

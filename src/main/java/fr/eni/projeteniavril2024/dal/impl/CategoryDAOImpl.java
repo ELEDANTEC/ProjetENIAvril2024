@@ -14,9 +14,17 @@ import java.util.List;
 
 @Repository
 public class CategoryDAOImpl implements CategoryDAO {
-    private static final String SELECT_ALL = "SELECT category_id, label FROM CATEGORIES;";
-    private static final String SELECT_BY_ID = "SELECT category_id, label FROM CATEGORIES WHERE category_id = :category_id";
-    private static final String SELECT_EXISTING = "SELECT COUNT(category_id) FROM CATEGORIES WHERE category_id = :category_id;";
+    private static final String SELECT_ALL = "" +
+            "SELECT category_id, label " +
+            "FROM CATEGORIES;";
+    private static final String SELECT_BY_ID = "" +
+            "SELECT category_id, label " +
+            "FROM CATEGORIES " +
+            "WHERE category_id = :category_id";
+    private static final String SELECT_EXISTING = "" +
+            "SELECT COUNT(category_id) " +
+            "FROM CATEGORIES " +
+            "WHERE category_id = :category_id;";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;

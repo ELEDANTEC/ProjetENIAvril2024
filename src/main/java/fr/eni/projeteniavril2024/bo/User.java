@@ -1,7 +1,5 @@
 package fr.eni.projeteniavril2024.bo;
 
-import org.springframework.core.style.ToStringCreator;
-
 import java.util.List;
 
 /**
@@ -20,11 +18,11 @@ public class User {
     private String city;
     private String postalCode;
     private String password;
-    //confirmer le mot de passe, attribut non hashé, non lié en bdd
     private String plainPassword;
     private int credit;
     private boolean administrator;
-    
+    private String newPassword;
+    private String confirmationPassword;
     private List<SoldItem> itemsSold;
     private List<SoldItem> itemsPurchased;
     private List<Bid> bidsPlaced;
@@ -150,6 +148,22 @@ public class User {
 
     public void setAdministrator(boolean administrator) {
         this.administrator = administrator;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getConfirmationPassword() {
+        return confirmationPassword;
+    }
+
+    public void setConfirmationPassword(String confirmationPassword) {
+        this.confirmationPassword = confirmationPassword;
     }
 
     public List<SoldItem> getItemsSold() {

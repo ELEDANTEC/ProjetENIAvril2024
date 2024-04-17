@@ -12,7 +12,10 @@ import java.sql.SQLException;
 
 @Repository
 public class WithdrawalDAOImpl implements WithdrawalDAO {
-    private static final String SELECT_BY_ITEM_ID = "SELECT item_id, street, postal_code, city FROM WITHDRAWALS WHERE item_id = :item_id;";
+    private static final String SELECT_BY_ITEM_ID = "" +
+            "SELECT item_id, street, postal_code, city " +
+            "FROM WITHDRAWALS " +
+            "WHERE item_id = :item_id;";
     private static final String INSERT_INTO = "" +
             "INSERT INTO WITHDRAWALS " +
             "       (item_id, street, postal_code, city) " +

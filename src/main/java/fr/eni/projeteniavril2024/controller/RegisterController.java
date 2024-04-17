@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Controller
 @SessionAttributes({"userSession"})
 public class RegisterController {
-
     private final UserService userService;
 
     public RegisterController(UserService userService) {
@@ -29,13 +28,18 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public String registerUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+    public String registerUser(
+            Model model,
+            @Valid @ModelAttribute("user") User user,
+            BindingResult bindingResult
+    ) {
         if (bindingResult.hasErrors()) {
             return "security/register.html";
         }
-
+        if (bindingResult.hasErrors()) {
+            return "security/register.html";
+        }
         userService.createUser(user);
-
         model.addAttribute("successMessage", "Votre compte a été créé avec succès !");
         return "redirect:/login";
     }

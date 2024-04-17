@@ -13,7 +13,10 @@ import java.util.List;
 
 @Repository
 public class BidDAOImpl implements BidDAO {
-    private static final String SELECT_ALL = "SELECT user_id, item_id, bid_date, bid_amount FROM BIDS WHERE item_id = :item_id;";
+    private static final String SELECT_ALL = "" +
+            "SELECT user_id, item_id, bid_date, bid_amount " +
+            "FROM BIDS " +
+            "WHERE item_id = :item_id;";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
