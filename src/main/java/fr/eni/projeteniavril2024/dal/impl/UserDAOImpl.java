@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
             + "city, "
             + "password) "
             + "VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password)";
-    private final static String SELECT_ALL_USERS = "SELECT * FROM Users;";
+    private final static String SELECT_ALL_USERS = "SELECT user_id, username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator FROM Users;";
     private static final String DELETE_USER = "DELETE FROM USERS WHERE user_id = :userId";
     private static final String CREATE_USER = "INSERT INTO USERS (username, last_name, first_name, email, phone, street, postal_code, city, password, credit, administrator) VALUES (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password, :credit, false);";
 
@@ -67,7 +67,6 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-
     @Override
     public User getUserById(int userId) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
@@ -98,7 +97,6 @@ public class UserDAOImpl implements UserDAO {
             return null;
         }
     }
-
 
     @Override
     public void updateUser(User user) {

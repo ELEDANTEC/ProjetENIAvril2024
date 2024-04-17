@@ -8,72 +8,54 @@
         )}"
 >
 <title></title>
-<main class="main-content">
-    <div class="container container-my-profil">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="title">ENI-Enchères</div>
-                <div class="content-profil-value">
-                <table class="table table-borderless">
-                    <tbody>
-                        <tr>
-                            <td>Pseudo</td>
-                            <td th:text="${user.username}"></td>
-                        </tr>
-                        <tr>
-                            <td>Nom</td>
-                            <td th:text="${user.lastName}"></td>
-                        </tr>
-                        <tr>
-                            <td>Prénom</td>
-                            <td th:text="${user.firstName}"></td>
-                        </tr>
-                        <tr>
-                            <td>Email</td>
-                            <td th:text="${user.email}"></td>
-                        </tr>
-                        <tr>
-                            <td>Téléphone</td>
-                            <td th:text="${user.phone}"></td>
-                        </tr>
-                        <tr>
-                            <td>Rue</td>
-                            <td th:text="${user.street}"></td>
-                        </tr>
-                        <tr>
-                            <td>Code postal</td>
-                            <td th:text="${user.postalCode}"></td>
-                        </tr>
-                        <tr>
-                            <td>Ville</td>
-                            <td th:text="${user.city}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-                <div class="d-grid gap-2 col-2 mx-auto" th:if="${userSession.userId eq user.userId}">
-                    <a th:href="@{/user/redirect/{userId}(userId=${user.userId})}" class="btn btn-primary" type="button">Modifier votre profil</a>
+    <main class="main-content">
+        <div class="container container-my-profil">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title">ENI-Enchères</div>
+                    <div class="content-profil-value">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td>Pseudo</td>
+                                <td th:text="${user.username}"></td>
+                            </tr>
+                            <tr>
+                                <td>Nom</td>
+                                <td th:text="${user.lastName}"></td>
+                            </tr>
+                            <tr>
+                                <td>Prénom</td>
+                                <td th:text="${user.firstName}"></td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td th:text="${user.email}"></td>
+                            </tr>
+                            <tr>
+                                <td>Téléphone</td>
+                                <td th:text="${user.phone}"></td>
+                            </tr>
+                            <tr>
+                                <td>Rue</td>
+                                <td th:text="${user.street}"></td>
+                            </tr>
+                            <tr>
+                                <td>Code postal</td>
+                                <td th:text="${user.postalCode}"></td>
+                            </tr>
+                            <tr>
+                                <td>Ville</td>
+                                <td th:text="${user.city}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="d-grid gap-2 col-2 mx-auto" th:if="${userSession.userId eq user.userId}">
+                        <a th:href="@{/user/redirect/{userId}(userId=${user.userId})}" class="btn btn-primary" type="button">Modifier votre profil</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 </html>
-
-<style>
-    .container-my-profil{
-        padding-top: 5%;
-    }
-    .container-my-profil .title{
-        font-size: 24px;
-    }
-
-    .container-my-profil .content-profil-value{
-        display: flex;
-        justify-content: center;
-    }
-
-    .container-my-profil .table{
-        width: 33%;
-    }
-</style>
