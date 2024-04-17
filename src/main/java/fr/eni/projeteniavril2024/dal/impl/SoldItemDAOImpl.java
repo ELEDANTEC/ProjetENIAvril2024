@@ -3,6 +3,7 @@ package fr.eni.projeteniavril2024.dal.impl;
 import fr.eni.projeteniavril2024.bo.Category;
 import fr.eni.projeteniavril2024.bo.SoldItem;
 import fr.eni.projeteniavril2024.bo.User;
+import fr.eni.projeteniavril2024.bo.Withdrawal;
 import fr.eni.projeteniavril2024.dal.SoldItemDAO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,22 +22,27 @@ public class SoldItemDAOImpl implements SoldItemDAO {
     private static final String SELECT_ALL = "" +
             "SELECT si.item_id, si.item_name, si.description, si.start_auction_date, si.end_auction_date, si.initial_price, si.sale_price, si.user_id, si.category_id, " +
             "       c.label, " +
-            "       u.username, u.last_name, u.first_name, u.email, u.phone, u.street, u.postal_code, u.city, u.credit, u.administrator " +
-            "FROM SOLD_ITEMS AS si " +
-            "   INNER JOIN CATEGORIES AS c " +
-            "       ON si.category_id = c.category_id " +
-            "   INNER JOIN USERS AS u " +
-            "       ON si.user_id = u.user_id;";
-    private static final String SELECT_BY_ID = "" +
-            "SELECT si.item_id, si.item_name, si.description, si.start_auction_date, si.end_auction_date, si.initial_price, si.sale_price, si.user_id, si.category_id, " +
-            "       c.label, " +
-            "       u.username, u.last_name, u.first_name, u.email, u.phone, u.street, u.postal_code, u.city, u.credit, u.administrator " +
+            "       u.username, u.last_name, u.first_name, u.email, u.phone, u.street, u.postal_code, u.city, u.credit, u.administrator, " +
+            "       w.street, w.postal_code, w.city " +
             "FROM SOLD_ITEMS AS si " +
             "   INNER JOIN CATEGORIES AS c " +
             "       ON si.category_id = c.category_id " +
             "   INNER JOIN USERS AS u " +
             "       ON si.user_id = u.user_id " +
-            "WHERE si.item_id = :item_id";
+            "   INNER JOIN WITHDRAWALS AS w " +
+            "       ON si.item_id = w.item_id;";
+    private static final String SELECT_BY_ID = "" +
+            "SELECT si.item_id, si.item_name, si.description, si.start_auction_date, si.end_auction_date, si.initial_price, si.sale_price, si.user_id, si.category_id, " +
+            "       c.label, " +
+            "       u.username, u.last_name, u.first_name, u.email, u.phone, u.street, u.postal_code, u.city, u.credit, u.administrator, " +
+            "       w.street, w.postal_code, w.city " +
+            "FROM SOLD_ITEMS AS si " +
+            "   INNER JOIN CATEGORIES AS c " +
+            "       ON si.category_id = c.category_id " +
+            "   INNER JOIN USERS AS u " +
+            "       ON si.user_id = u.user_id " +
+            "   INNER JOIN WITHDRAWALS AS w " +
+            "       ON si.item_id = w.item_id;";
     private static final String INSERT_INTO = "" +
             "INSERT INTO SOLD_ITEMS " +
             "       (item_name, description, start_auction_date, end_auction_date, initial_price, user_id, category_id) " +
@@ -132,6 +138,13 @@ public class SoldItemDAOImpl implements SoldItemDAO {
             user.setCredit(rs.getInt("u.credit"));
             user.setAdministrator(rs.getBoolean("u.administrator"));
             soldItem.setSeller(user);
+
+            Withdrawal withdrawal = new Withdrawal();
+            withdrawal.setItemId(rs.getInt("si.item_id"));
+            withdrawal.setStreet(rs.getString("w.street"));
+            withdrawal.setPostalCode(rs.getString("w.postal_code"));
+            withdrawal.setCity(rs.getString("w.city"));
+            soldItem.setWithdrawal(withdrawal);
 
             return soldItem;
         }

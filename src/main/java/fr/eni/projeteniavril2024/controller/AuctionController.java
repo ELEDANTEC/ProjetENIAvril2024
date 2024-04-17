@@ -37,12 +37,19 @@ public class AuctionController {
     }
 
     @GetMapping("/sell")
-    public String getAuctionForm(Model model) {
+    public String getAuctionForm(
+            @ModelAttribute("userSession") User userSession,
+            Model model
+    ) {
         SoldItem auction = new SoldItem();
-        Withdrawal withdrawal = new Withdrawal();
+        Withdrawal withdrawal = new Withdrawal(
+                userSession.getStreet(),
+                userSession.getCity(),
+                userSession.getPostalCode()
+        );
+        auction.setWithdrawal(withdrawal);
 
         model.addAttribute("auction", auction);
-        model.addAttribute("withdrawal", withdrawal);
         return "auction/create.html";
     }
 
@@ -50,14 +57,15 @@ public class AuctionController {
     public String createAuction(
             @ModelAttribute("userSession") User userSession,
             @Valid @ModelAttribute("auction") SoldItem auction,
-//            @Valid @ModelAttribute("withdrawal") Withdrawal withdrawal,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             return "auction/create.html";
         } else {
             try {
+                auction.setSaleStatus("Créée");
                 auction.setSeller(userSession);
+                auction.setCategory(auctionService.getCategoryById(auction.getCategory().getCategoryId()));
                 auctionService.createAuction(auction);
                 return "redirect:/auctions";
             } catch (BusinessException businessException) {

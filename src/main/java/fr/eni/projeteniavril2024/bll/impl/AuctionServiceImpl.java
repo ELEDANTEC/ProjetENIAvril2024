@@ -4,13 +4,10 @@ import fr.eni.projeteniavril2024.bll.AuctionService;
 import fr.eni.projeteniavril2024.bo.Category;
 import fr.eni.projeteniavril2024.bo.SoldItem;
 import fr.eni.projeteniavril2024.bo.User;
-import fr.eni.projeteniavril2024.dal.BidDAO;
-import fr.eni.projeteniavril2024.dal.CategoryDAO;
-import fr.eni.projeteniavril2024.dal.SoldItemDAO;
-import fr.eni.projeteniavril2024.dal.UserDAO;
-import fr.eni.projeteniavril2024.exception.BusinessException;
+import fr.eni.projeteniavril2024.bo.Withdrawal;
+import fr.eni.projeteniavril2024.dal.*;
 import fr.eni.projeteniavril2024.exception.BusinessCode;
-import org.springframework.cglib.core.Local;
+import fr.eni.projeteniavril2024.exception.BusinessException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +21,20 @@ public class AuctionServiceImpl implements AuctionService {
     private final CategoryDAO categoryDAO;
     private final BidDAO bidDAO;
     private final UserDAO userDAO;
+    private final WithdrawalDAO withdrawalDAO;
 
     AuctionServiceImpl(
             SoldItemDAO soldItemDAO,
             CategoryDAO categoryDAO,
             BidDAO bidDAO,
-            UserDAO userDAO
+            UserDAO userDAO,
+            WithdrawalDAO withdrawalDAO
     ) {
         this.soldItemDAO = soldItemDAO;
         this.categoryDAO = categoryDAO;
         this.bidDAO = bidDAO;
         this.userDAO = userDAO;
+        this.withdrawalDAO = withdrawalDAO;
     }
 
     @Override
@@ -79,12 +79,19 @@ public class AuctionServiceImpl implements AuctionService {
         if (isValid) {
             isValid &= isAuctionNameValid(auction.getItemName(), businessException);
             isValid &= isAuctionDescriptionValid(auction.getDescription(), businessException);
-            isValid &= isAuctionDateValid(auction.getStartAuctionDate(), auction.getEndAuctionDate(), businessException);
+            isValid &= isAuctionDateStartValid(auction.getStartAuctionDate(), businessException);
+            isValid &= isAuctionDateEndValid(auction.getStartAuctionDate(), auction.getEndAuctionDate(), businessException);
             isValid &= isAuctionSellerValid(auction.getSeller(), businessException);
             isValid &= isAuctionCategoryValid(auction.getCategory(), businessException);
+            isValid &= isAuctionWithdrawalValid(auction.getWithdrawal(), businessException);
+            isValid &= isAuctionWithdrawalStreetValid(auction.getWithdrawal().getStreet(), businessException);
+            isValid &= isAuctionWithdrawalPostalCodeValid(auction.getWithdrawal().getPostalCode(), businessException);
+            isValid &= isAuctionWithdrawalCityValid(auction.getWithdrawal().getCity(), businessException);
         }
         if (isValid) {
             auction.setItemId(soldItemDAO.create(auction));
+            auction.getWithdrawal().setItemId(auction.getItemId());
+            withdrawalDAO.create(auction.getWithdrawal());
         } else {
             businessException.add(BusinessCode.BLL_AUCTION_CREATE_ERROR);
             throw businessException;
@@ -152,21 +159,32 @@ public class AuctionServiceImpl implements AuctionService {
         return true;
     }
 
-    public boolean isAuctionDateValid(
+    public boolean isAuctionDateStartValid(
+            LocalDate startAuctionDate,
+            BusinessException businessException
+    ) {
+        if (startAuctionDate == null) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_START_NULL);
+            return false;
+        }
+        if (LocalDate.now().isAfter(startAuctionDate)) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_START_WRONG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAuctionDateEndValid(
             LocalDate startAuctionDate,
             LocalDate endAuctionDate,
             BusinessException businessException
     ) {
-        if (startAuctionDate == null) {
-            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE);
+        if (endAuctionDate == null) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_END_NULL);
             return false;
         }
-        if (LocalDate.now().isAfter(startAuctionDate)) {
-            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_START);
-            return false;
-        }
-        if (LocalDate.now().isAfter(endAuctionDate) || startAuctionDate.isAfter(endAuctionDate)) {
-            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_END);
+        if (startAuctionDate.isAfter(endAuctionDate)) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_END_WRONG);
             return false;
         }
         return true;
@@ -197,6 +215,62 @@ public class AuctionServiceImpl implements AuctionService {
         }
         if (categoryDAO.existingCategory(auctionCategory.getCategoryId()) < 1) {
             businessException.add(BusinessCode.VALIDATION_AUCTION_CATEGORY_ID_UNKNOWN);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAuctionWithdrawalValid(
+            Withdrawal auctionWithdrawal,
+            BusinessException businessException
+    ) {
+        if (auctionWithdrawal == null) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_WITHDRAWAL_NULL);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAuctionWithdrawalStreetValid(
+            String auctionWithdrawalStreet,
+            BusinessException businessException
+    ) {
+        if (auctionWithdrawalStreet == null) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_WITHDRAWAL_STREET_BLANK);
+            return false;
+        }
+        if (auctionWithdrawalStreet.length() > 30) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_WITHDRAWAL_STREET_LENGTH);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAuctionWithdrawalPostalCodeValid(
+            String auctionWithdrawalPostalCode,
+            BusinessException businessException
+    ) {
+        if (auctionWithdrawalPostalCode == null) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_WITHDRAWAL_POSTAL_CODE_BLANK);
+            return false;
+        }
+        if (auctionWithdrawalPostalCode.length() > 5) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_WITHDRAWAL_POSTAL_CODE_LENGTH);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAuctionWithdrawalCityValid(
+            String auctionWithdrawalCity,
+            BusinessException businessException
+    ) {
+        if (auctionWithdrawalCity == null) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_WITHDRAWAL_CITY_BLANK);
+            return false;
+        }
+        if (auctionWithdrawalCity.length() > 30) {
+            businessException.add(BusinessCode.VALIDATION_AUCTION_WITHDRAWAL_CITY_LENGTH);
             return false;
         }
         return true;

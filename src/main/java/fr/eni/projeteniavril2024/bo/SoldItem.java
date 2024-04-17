@@ -20,6 +20,7 @@ public class SoldItem {
 
     private User seller;
     private Category category;
+    private Withdrawal withdrawal;
     private List<Bid> bids;
 
     public SoldItem() {
@@ -121,6 +122,14 @@ public class SoldItem {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Withdrawal getWithdrawal() {
+        return withdrawal;
+    }
+
+    public void setWithdrawal(Withdrawal withdrawal) {
+        this.withdrawal = withdrawal;
     }
 
     public List<Bid> getBids() {

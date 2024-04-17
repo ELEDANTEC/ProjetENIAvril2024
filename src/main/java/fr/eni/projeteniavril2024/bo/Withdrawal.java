@@ -15,12 +15,10 @@ public class Withdrawal {
     }
 
     public Withdrawal(
-            int itemId,
             String street,
             String city,
             String postalCode
     ) {
-        this.itemId = itemId;
         this.street = street;
         this.city = city;
         this.postalCode = postalCode;

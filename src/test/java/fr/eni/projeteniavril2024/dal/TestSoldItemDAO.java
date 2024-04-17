@@ -32,7 +32,7 @@ class TestSoldItemDAO {
         assertEquals(expectedSoldItemName, soldItems.get(0).getItemName());
         assertEquals(expectedSoldItemStartAuctionDate, soldItems.get(0).getStartAuctionDate());
         assertEquals(expectedSoldItemInitialPrice, soldItems.get(0).getInitialPrice());
-        assertEquals(expectedUserId, soldItems.get(0).getUser().getUserId());
+        assertEquals(expectedUserId, soldItems.get(0).getSeller().getUserId());
         assertEquals(expectedCategoryId, soldItems.get(0).getCategory().getCategoryId());
     }
 
@@ -51,7 +51,7 @@ class TestSoldItemDAO {
         assertEquals(expectedSoldItemName, soldItem.getItemName());
         assertEquals(expectedSoldItemStartAuctionDate, soldItem.getStartAuctionDate());
         assertEquals(expectedSoldItemInitialPrice, soldItem.getInitialPrice());
-        assertEquals(expectedUserId, soldItem.getUser().getUserId());
+        assertEquals(expectedUserId, soldItem.getSeller().getUserId());
         assertEquals(expectedCategoryId, soldItem.getCategory().getCategoryId());
     }
 }

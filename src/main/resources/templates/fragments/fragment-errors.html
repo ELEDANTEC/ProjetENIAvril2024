@@ -1,0 +1,17 @@
+<div
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="frag-errors"
+        th:if="${#fields.hasErrors('*')}"
+        class="alert alert-danger"
+        role="alert"
+>
+    <p>
+        Erreur(s) détéctée(s), vérifiez vos champs
+    </p>
+    <ul>
+        <li
+            th:each="error : ${#fields.errors('global')}"
+            th:text="#{${error}}"
+        ></li>
+    </ul>
+</div>
