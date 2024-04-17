@@ -34,35 +34,29 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public boolean isUniqueUsername(User user) {
-        User existingUser = userDAO.findByUsername(user.getUsername());
-        return existingUser == null || existingUser.getUserId() == user.getUserId();
+    public boolean isUniqueUsername(String username) {
+        User existingUser = userDAO.findByUsername(username);
+        return !(existingUser != null && username.toLowerCase().equals(existingUser.getUsername().toLowerCase()));
     }
 
-    public boolean isUniqueEmail(User user) {
-        User existingUser = userDAO.findByEmail(user.getEmail());
-        return existingUser == null || existingUser.getUserId() == user.getUserId();
+    public boolean isUniqueEmail(String email) {
+        User existingUser = userDAO.findByEmail(email);
+        return !(existingUser != null && email.toLowerCase().equals(existingUser.getEmail().toLowerCase()));
     }
 
 
-    @Override
     public void createUser(User user) {
-        // Vérifier si le nom d'utilisateur est unique
-        if (!isUniqueUsername(user)) {
-            // Si ce n'est pas le cas, mettre un message dans l'objet User pour l'afficher dans l'HTML
+        if (!isUniqueUsername(user.getUsername())) {
             return;
         }
 
-        // Vérifier si l'adresse e-mail est unique
-        if (!isUniqueEmail(user)) {
-            // Si ce n'est pas le cas, mettre un message dans l'objet User pour l'afficher dans l'HTML
+        if (!isUniqueEmail(user.getEmail())) {
             return;
         }
 
-        // Si les informations sont uniques, encoder le mot de passe et créer l'utilisateur
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-
         userDAO.createUser(user);
     }
 }
+
