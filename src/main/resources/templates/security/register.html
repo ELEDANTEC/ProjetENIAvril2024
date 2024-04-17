@@ -20,6 +20,11 @@
                     <div class="mb-3">
                         <label for="username" class="form-label">Pseudo</label>
                         <input th:field="*{user.username}" type="text" class="form-control" id="username" name="username" required>
+                        <div th:if="${#fields.hasErrors('user.username')}" class="alert alert-danger" role="alert">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('user.username')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="firstName" class="form-label">Prénom</label>

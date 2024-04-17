@@ -105,6 +105,9 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void createUser(User user) {
+
+                user.setCredit(500);
+
                 MapSqlParameterSource namedParameters = new MapSqlParameterSource();
                 namedParameters.addValue("username", user.getUsername());
                 namedParameters.addValue("last_name", user.getLastName());
