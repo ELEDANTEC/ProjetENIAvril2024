@@ -20,7 +20,6 @@ public class User {
     private String city;
     private String postalCode;
     private String password;
-    //confirmer le mot de passe, attribut non hashé, non lié en bdd
     private String plainPassword;
     private int credit;
     private boolean administrator;

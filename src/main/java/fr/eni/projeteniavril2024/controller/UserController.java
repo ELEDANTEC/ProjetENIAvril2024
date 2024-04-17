@@ -20,6 +20,7 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    private final UserService userService;
 
     @Autowired
     private UserService userService;
@@ -119,6 +120,23 @@ public class UserController {
             return "redirect:/login?deleteSuccess";
         } else {
             return "redirect:/error"; // ou une autre page de votre choix
+        }
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute User user, Model model) {
+        try {
+            userService.createUser(user);
+            return "redirect:/security/login";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "register";
         }
     }
 }

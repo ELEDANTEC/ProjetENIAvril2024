@@ -56,12 +56,17 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findByEmail(String email) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("email", email);
-        return namedParameterJdbcTemplate.queryForObject(
-                SELECT_BY_EMAIL,
-                namedParameters,
-                new UserRowMapper()
-        );
+        try {
+            return namedParameterJdbcTemplate.queryForObject(
+                    SELECT_BY_EMAIL,
+                    namedParameters,
+                    new UserRowMapper()
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
 
     @Override
     public User getUserById(int userId) {
@@ -83,12 +88,17 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findByUsername(String username) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("username", username);
-        return namedParameterJdbcTemplate.queryForObject(
-                SELECT_BY_USERNAME,
-                namedParameters,
-                new UserRowMapper()
-        );
+        try {
+            return namedParameterJdbcTemplate.queryForObject(
+                    SELECT_BY_USERNAME,
+                    namedParameters,
+                    new UserRowMapper()
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
 
     @Override
     public void updateUser(User user) {

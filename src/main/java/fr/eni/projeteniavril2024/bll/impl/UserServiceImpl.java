@@ -46,16 +46,32 @@ public class UserServiceImpl implements UserService {
         userDAO.deleteUserById(userId);
     }
 
-    @Override
+
+    public boolean isUniqueUsername(String username) {
+        User existingUser = userDAO.findByUsername(username);
+        return !(existingUser != null && username.toLowerCase().equals(existingUser.getUsername().toLowerCase()));
+    }
+
+    public boolean isUniqueEmail(String email) {
+        User existingUser = userDAO.findByEmail(email);
+        return !(existingUser != null && email.toLowerCase().equals(existingUser.getEmail().toLowerCase()));
+    }
+
+
     public void createUser(User user) {
-//        System.err.println("Object user");
-//        System.out.println(user);
+        if (!isUniqueUsername(user.getUsername())) {
+            return;
+        }
+
+        if (!isUniqueEmail(user.getEmail())) {
+            return;
+        }
+
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-//        System.err.println("Hashed password user");
-//        System.out.println(user);
         userDAO.createUser(user);
     }
 
 
 }
+
