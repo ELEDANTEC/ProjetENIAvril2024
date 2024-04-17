@@ -5,8 +5,6 @@ import fr.eni.projeteniavril2024.bo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.WebRequest;
 
 import java.util.List;
 
@@ -59,13 +57,22 @@ public class UserController {
         userService.updateUserById(userToUpdate);
         return "redirect:/user/" + userId;
     }
-    @PostMapping("/create")
-    public String createUser(
-            @ModelAttribute("userSession") User userSession,
-            @ModelAttribute User user
-    ) {
-        userService.createUser(user);
-        return "redirect:/security/login";
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute User user, Model model) {
+        try {
+            userService.createUser(user);
+            return "redirect:/security/login";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "register";
+        }
     }
 
     @GetMapping("/test/{userId}")

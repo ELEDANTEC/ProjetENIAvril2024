@@ -5,6 +5,7 @@ import fr.eni.projeteniavril2024.bo.User;
 import fr.eni.projeteniavril2024.dal.UserDAO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -32,14 +33,30 @@ public class UserServiceImpl implements UserService {
         userDAO.updateUserById(user);
     }
 
-    @Override
+
+    public boolean isUniqueUsername(String username) {
+        User existingUser = userDAO.findByUsername(username);
+        return !(existingUser != null && username.toLowerCase().equals(existingUser.getUsername().toLowerCase()));
+    }
+
+    public boolean isUniqueEmail(String email) {
+        User existingUser = userDAO.findByEmail(email);
+        return !(existingUser != null && email.toLowerCase().equals(existingUser.getEmail().toLowerCase()));
+    }
+
+
     public void createUser(User user) {
-//        System.err.println("Object user");
-//        System.out.println(user);
+        if (!isUniqueUsername(user.getUsername())) {
+            return;
+        }
+
+        if (!isUniqueEmail(user.getEmail())) {
+            return;
+        }
+
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-//        System.err.println("Hashed password user");
-//        System.out.println(user);
         userDAO.createUser(user);
     }
 }
+
