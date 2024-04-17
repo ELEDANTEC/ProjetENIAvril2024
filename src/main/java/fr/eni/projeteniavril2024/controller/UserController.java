@@ -37,13 +37,15 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String getUserById(
-            @ModelAttribute("userSession") User userSession,
             @PathVariable int userId,
-            Model model
+            Model model,
+            HttpSession session
     ) {
         User user = userService.getUserById(userId);
+        User userSession = (User) session.getAttribute("userSession");
 
         model.addAttribute("user", user);
+        model.addAttribute("userSession", userSession);
         return "profil/my-profil.html";
     }
 
@@ -67,25 +69,27 @@ public class UserController {
             if (updatedUser.getPassword() != null && encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
                     && updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())) {
                 userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
-
-                userService.updateUser(userToUpdate);
-
-                // Supprimer l'utilisateur de la session
-                session.invalidate();
-
-                // Rediriger vers la page de connexion
-                return "redirect:/login";
             } else if (!encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())) {
-                bindingResult.rejectValue("password", "error.user", "Mot de passe actuel incorrect");
+                bindingResult.rejectValue("password", "error.user", "Mot de passe actuel incorrect ou la confirmation du mot de passe ne correspond pas");
+                model.addAttribute("user", userToUpdate);
+                return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
             } else if (!Objects.equals(updatedUser.getConfirmationPassword(), updatedUser.getNewPassword())) {
-                bindingResult.rejectValue("confirmationPassword", "error.user", "La confirmation du mot de passe ne correspond pas");
+                bindingResult.rejectValue("password", "error.user", "La confirmation du mot de passe ne correspond pas");
+                model.addAttribute("user", userToUpdate);
+                return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
             }
+            userService.updateUser(userToUpdate);
+
+            session.invalidate();
+
+            return "redirect:/login";
         }
 
-        model.addAttribute("user", userToUpdate);
-        return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
-    }
+        userService.updateUser(userToUpdate);
 
+        return "redirect:/session";
+
+    }
     @GetMapping("/redirect/{userId}")
     public String redirectToUpdateProfilePage(
             @PathVariable int userId,

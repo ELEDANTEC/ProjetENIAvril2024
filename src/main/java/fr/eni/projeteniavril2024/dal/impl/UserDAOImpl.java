@@ -2,6 +2,7 @@ package fr.eni.projeteniavril2024.dal.impl;
 
 import fr.eni.projeteniavril2024.bo.User;
 import fr.eni.projeteniavril2024.dal.UserDAO;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

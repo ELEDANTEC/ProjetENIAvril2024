@@ -41,6 +41,7 @@
                                 <div class="mb-3 test">
                                     <label for="newPassword" class="form-label">nouveau mot de passe</label>
                                     <input type="password" class="form-control" id="newPassword" th:field="*{user.newPassword}" >
+                                    <div class="text-danger" th:if="${#fields.hasErrors('user.newPassword')}" th:errors="*{user.newPassword}"></div>
                                 </div>
                                 <div class="mb-3 test">
                                     <div>Crédits</div>
@@ -67,8 +68,8 @@
                                 <div class="mb-3 test confirmation-password-content">
                                     <label for="confirmationPassword" class="form-label">Confirmation</label>
                                     <input type="password" class="form-control" id="confirmationPassword" th:field="*{user.confirmationPassword}">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('user.confirmationPassword')}" th:errors="*{user.confirmationPassword}"></div>
                                 </div>
-
                             </div>
                         </div>
                         <div class="d-grid gap-2 col-6 mx-auto">
