@@ -12,7 +12,15 @@ import java.sql.SQLException;
 
 @Repository
 public class WithdrawalDAOImpl implements WithdrawalDAO {
-    private static final String SELECT_BY_ITEM_ID = "SELECT item_id, street, postal_code, city FROM WITHDRAWALS WHERE item_id = :item_id;";
+    private static final String SELECT_BY_ITEM_ID = "" +
+            "SELECT item_id, street, postal_code, city " +
+            "FROM WITHDRAWALS " +
+            "WHERE item_id = :item_id;";
+    private static final String INSERT_INTO = "" +
+            "INSERT INTO WITHDRAWALS " +
+            "       (item_id, street, postal_code, city) " +
+            "   VALUES " +
+            "       (:item_id, :street, :postal_code, :city);";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -30,6 +38,16 @@ public class WithdrawalDAOImpl implements WithdrawalDAO {
                 namedParameters,
                 new WithdrawalRowMapper()
         );
+    }
+
+    @Override
+    public void create(Withdrawal withdrawal) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_id", withdrawal.getItemId());
+        namedParameters.addValue("street", withdrawal.getStreet());
+        namedParameters.addValue("postal_code", withdrawal.getPostalCode());
+        namedParameters.addValue("city", withdrawal.getCity());
+        namedParameterJdbcTemplate.update(INSERT_INTO, namedParameters);
     }
 
     public static class WithdrawalRowMapper implements RowMapper<Withdrawal> {

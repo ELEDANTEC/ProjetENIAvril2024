@@ -8,7 +8,6 @@
             class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
     >
         <img src="/images/eni_auctions.png" alt="logo" height="50" width="50">
-
         <span>ENI-Enchères</span>
     </a>
     <ul
@@ -18,15 +17,15 @@
         <li class="nav-item">
             <a
                     th:href="@{/auctions}"
-                    class="nav-link active"
+                    class="nav-link"
             >
                 Enchères
             </a>
         </li>
         <li class="nav-item">
             <a
-                    th:href="@{/sell}"
-                    class="nav-link active"
+                    th:href="@{/auctions/sell}"
+                    class="nav-link"
             >
                 Vendre un article
             </a>
@@ -35,7 +34,7 @@
             <a
                     th:if="${userSession != null && userSession.userId > 0}"
                     th:href="@{'/user/' + ${userSession.userId}}"
-                    class="nav-link active"
+                    class="nav-link"
             >
                 Mon profil
             </a>
@@ -43,17 +42,23 @@
         <li class="nav-item">
             <a
                     th:href="@{/logout}"
-                    class="nav-link active"
+                    class="nav-link"
             >
                 Déconnexion
             </a>
         </li>
     </ul>
-    <a
+    <ul
             th:unless="${#authorization.expression('isAuthenticated')}"
-            th:href="@{/login}"
             class="nav nav-pills"
     >
-        S'inscrire - Se connecter
-    </a>
+        <li class="nav-item">
+            <a
+                th:href="@{/login}"
+                class="nav-link"
+            >
+                S'inscrire - Se connecter
+            </a>
+        </li>
+    </ul>
 </header>

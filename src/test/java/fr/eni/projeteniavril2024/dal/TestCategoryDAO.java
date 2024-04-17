@@ -39,4 +39,14 @@ class TestCategoryDAO {
         assertNotNull(category);
         assertEquals(expectedCategoryLabel, category.getLabel());
     }
+
+    @Test
+    void test03_category_existingCategory() {
+        int categoryId = 1;
+        int expectedCount = 1;
+
+        int count = categoryDAO.existingCategory(categoryId);
+
+        assertEquals(expectedCount, count);
+    }
 }

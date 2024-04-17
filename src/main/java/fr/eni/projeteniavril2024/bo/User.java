@@ -1,7 +1,5 @@
 package fr.eni.projeteniavril2024.bo;
 
-import org.springframework.core.style.ToStringCreator;
-
 import java.util.List;
 
 /**

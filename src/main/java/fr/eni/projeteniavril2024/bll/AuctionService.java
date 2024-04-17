@@ -8,6 +8,7 @@ import java.util.List;
 public interface AuctionService {
     List<SoldItem> getAuctions();
     SoldItem getAuctionById(int id);
+    void createAuction(SoldItem auction);
     List<Category> getCategories();
     Category getCategoryById(int id);
 }

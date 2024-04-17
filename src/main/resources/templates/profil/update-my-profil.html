@@ -4,10 +4,15 @@
         th:replace="~{layouts/layout :: layout(
             pageContent=~{:: .main-content},
             pageTitle=~{:: title},
-            additionalCss=~{}
+            additionalCss=~{:: fragment-css}
         )}"
 >
+    <div th:fragment="fragment-css">
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
+    </div>
+
     <title></title>
+
     <main class="main-content">
         <div class="container container-update-my-profil">
             <div class="row">

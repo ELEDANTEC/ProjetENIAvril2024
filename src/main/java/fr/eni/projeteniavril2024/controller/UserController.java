@@ -1,17 +1,12 @@
 package fr.eni.projeteniavril2024.controller;
 
 import fr.eni.projeteniavril2024.bll.UserService;
-import fr.eni.projeteniavril2024.bll.impl.UserServiceImpl;
 import fr.eni.projeteniavril2024.bo.User;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -20,13 +15,15 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    private final UserService userService;
+    private final PasswordEncoder encoder;
 
-    @Autowired
-    private UserService userService;
-    private PasswordEncoder encoder;
-
-    public UserController(PasswordEncoder encoder) {
+    public UserController(
+            UserService userService,
+            PasswordEncoder encoder
+    ) {
         this.encoder = encoder;
+        this.userService = userService;
     }
 
     // Endpoint pour récupérer tous les utilisateurs
@@ -50,7 +47,12 @@ public class UserController {
     }
 
     @PostMapping("/update/{userId}")
-    public String updateUserById(@PathVariable int userId, @ModelAttribute User updatedUser, Model model, HttpSession session) {
+    public String updateUserById(
+            @PathVariable int userId,
+            @ModelAttribute User updatedUser,
+            Model model,
+            HttpSession session
+    ) {
         User userToUpdate = userService.getUserById(userId);
         userToUpdate.setLastName(updatedUser.getLastName());
         userToUpdate.setFirstName(updatedUser.getFirstName());
@@ -62,20 +64,30 @@ public class UserController {
 
         // Vérification si le nom d'utilisateur est modifié
         if (!userToUpdate.getUsername().equals(updatedUser.getUsername())) {
-            if (!userService.isUsernameUnique(updatedUser.getUsername(), userId)) {
+            if (userService.isUniqueUsername(updatedUser.getUsername()) > 0) {
                 model.addAttribute("user", userToUpdate);
                 model.addAttribute("errorMessage", "Nom d'utilisateur déjà utilisé");
                 return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
             }
             userToUpdate.setUsername(updatedUser.getUsername());
 
-
             // Vérification et mise à jour du mot de passe
-            if (updatedUser.getNewPassword() != null && !updatedUser.getNewPassword().isEmpty()
-                    && updatedUser.getConfirmationPassword() != null && !updatedUser.getConfirmationPassword().isEmpty()) {
-
-                if (updatedUser.getPassword() != null && encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
-                        && updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())) {
+            if (
+                    updatedUser.getNewPassword() != null
+                    &&
+                    !updatedUser.getNewPassword().isEmpty()
+                    &&
+                    updatedUser.getConfirmationPassword() != null
+                    &&
+                    !updatedUser.getConfirmationPassword().isEmpty()
+            ) {
+                if (
+                        updatedUser.getPassword() != null
+                        &&
+                        encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
+                        &&
+                        updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())
+                ) {
                     userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
                 } else if (!encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())) {
                     model.addAttribute("user", userToUpdate);
@@ -99,9 +111,15 @@ public class UserController {
 
             return "redirect:/login";
         }
-        if (updatedUser.getNewPassword() != null && !updatedUser.getNewPassword().isEmpty()
-                && updatedUser.getConfirmationPassword() != null && !updatedUser.getConfirmationPassword().isEmpty()) {
-
+        if (
+                updatedUser.getNewPassword() != null
+                &&
+                !updatedUser.getNewPassword().isEmpty()
+                &&
+                updatedUser.getConfirmationPassword() != null
+                &&
+                !updatedUser.getConfirmationPassword().isEmpty()
+        ) {
             if (updatedUser.getPassword() != null && encoder.matches(updatedUser.getPassword(), userToUpdate.getPassword())
                     && updatedUser.getNewPassword().equals(updatedUser.getConfirmationPassword())) {
                 userToUpdate.setPassword(encoder.encode(updatedUser.getNewPassword()));
@@ -115,12 +133,10 @@ public class UserController {
                 return "profil/update-my-profil";  // Retourner sur la même page avec les erreurs
             }
             userService.updateUser(userToUpdate);
-
             session.invalidate();
 
             return "redirect:/login";
         }
-
         userService.updateUser(userToUpdate);
 
         return "redirect:/session";
@@ -138,14 +154,22 @@ public class UserController {
     }
 
     @GetMapping("/update/{userId}")
-    public String showUpdateForm(@PathVariable int userId, Model model, HttpSession session) {
+    public String showUpdateForm(
+            @PathVariable int userId,
+            Model model,
+            HttpSession session
+    ) {
         User userToUpdate = (User) session.getAttribute("userSession");
         model.addAttribute("user", userToUpdate);
         return "redirect:/user/" + userId;
     }
 
     @PostMapping("/delete/{userId}")
-    public String deleteUser(@PathVariable int userId, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String deleteUser(
+            @PathVariable int userId,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
         User user = (User) session.getAttribute("userSession");
         if (user != null && user.getUserId() == userId) {
             userService.deleteUserById(userId);
@@ -165,7 +189,10 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user, Model model) {
+    public String registerUser(
+            @ModelAttribute User user,
+            Model model
+    ) {
         try {
             userService.createUser(user);
             return "redirect:/security/login";

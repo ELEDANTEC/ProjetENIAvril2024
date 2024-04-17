@@ -12,7 +12,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Principal;
 
-
 @Controller
 @SessionAttributes({"userSession"})
 public class LoginController {
@@ -20,7 +19,6 @@ public class LoginController {
 
     LoginController(ContextService contextService) {
         this.contextService = contextService;
-
     }
 
     @GetMapping("/login")

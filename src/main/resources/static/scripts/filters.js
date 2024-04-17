@@ -95,7 +95,7 @@ function filterAuctions() {
                     (
                         myAuctionsChecked
                         &&
-                        obj.user.userId === userSession.userId
+                        obj.seller.userId === userSession.userId
                         &&
                         saleStatus.includes(obj.saleStatus)
                     ) || (
@@ -145,8 +145,7 @@ function filterAuctions() {
         newDivContent += `<div class="card shadow border border-black border-3">`;
         newDivContent += `<div class="row g-0">`;
         newDivContent += `<div class="col-md-3 m-3">`;
-        // newDivContent += `<img src="/images/` + auction.itemId + `.png" alt="Image" width="140" height="100"/>`;
-        newDivContent += `<img src="/images/default.png" alt="Image" width="100" height="100"/>`;
+        newDivContent += `<img src="/images/` + auction.itemId + `.png" onError="this.onerror=null;this.src='/images/default.png';" width="100" height="100"/>`;
         newDivContent += `</div>`;
         newDivContent += `<div class="col-md-7 m-3">`;
         newDivContent += `<div class="text-decoration-underline">`;
@@ -171,7 +170,11 @@ function filterAuctions() {
         newDivContent += `Fin de l'enchère : <span>` + endAuctionDate + `</span>`;
         newDivContent += `</div>`;
         newDivContent += `<div>`;
-        newDivContent += `Vendeur : <span>` + auction.user.username + `</span>`;
+        if (isAuthenticated) {
+            newDivContent += `Vendeur : <a href="/user/` + auction.seller.userId + `"><span>` + auction.seller.username + `</span></a>`;
+        } else {
+            newDivContent += `Vendeur : <span>` + auction.seller.username + `</span>`;
+        }
         newDivContent += `</div>`;
         newDivContent += `</div>`;
         newDivContent += `</div>`;

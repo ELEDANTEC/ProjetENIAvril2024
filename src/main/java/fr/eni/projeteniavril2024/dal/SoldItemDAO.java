@@ -7,4 +7,6 @@ import java.util.List;
 public interface SoldItemDAO {
     List<SoldItem> findAll();
     SoldItem findById(int id);
+    int create(SoldItem soldItem);
+    int uniqueSoldItem(SoldItem soldItem);
 }

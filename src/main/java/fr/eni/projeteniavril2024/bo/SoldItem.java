@@ -18,8 +18,9 @@ public class SoldItem {
     private int salePrice;
     private String saleStatus;
 
-    private User user;
+    private User seller;
     private Category category;
+    private Withdrawal withdrawal;
     private List<Bid> bids;
 
     public SoldItem() {
@@ -107,12 +108,12 @@ public class SoldItem {
         this.saleStatus = saleStatus;
     }
 
-    public User getUser() {
-        return user;
+    public User getSeller() {
+        return seller;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setSeller(User seller) {
+        this.seller = seller;
     }
 
     public Category getCategory() {
@@ -121,6 +122,14 @@ public class SoldItem {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Withdrawal getWithdrawal() {
+        return withdrawal;
+    }
+
+    public void setWithdrawal(Withdrawal withdrawal) {
+        this.withdrawal = withdrawal;
     }
 
     public List<Bid> getBids() {

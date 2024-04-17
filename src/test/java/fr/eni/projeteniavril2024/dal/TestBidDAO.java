@@ -18,17 +18,17 @@ class TestBidDAO {
 
     @Test
     void test01_bid_findAll() {
-        int expectedBidCount = 1;
-        int expectedUserId = 1;
-        int expectedBidAmount = 150;
-        LocalDateTime expectedBidDate = LocalDateTime.of(2024, 4, 10, 0, 0);
+        int expectedBidCount = 2;
+        int expectedFirstBidUserId = 1;
+        int expectedFirstBidBidAmount = 200;
+        LocalDateTime expectedFirstBidBidDate = LocalDateTime.of(2024, 4, 8, 0, 0);
 
         List<Bid> bids = bidDAO.findAll(1);
 
         assertNotNull(bids);
         assertEquals(expectedBidCount, bids.size());
-        assertEquals(expectedUserId, bids.get(0).getUserId());
-        assertEquals(expectedBidAmount, bids.get(0).getBidAmount());
-        assertEquals(expectedBidDate, bids.get(0).getBidDate());
+        assertEquals(expectedFirstBidUserId, bids.get(0).getUserId());
+        assertEquals(expectedFirstBidBidAmount, bids.get(0).getBidAmount());
+        assertEquals(expectedFirstBidBidDate, bids.get(0).getBidDate());
     }
 }
