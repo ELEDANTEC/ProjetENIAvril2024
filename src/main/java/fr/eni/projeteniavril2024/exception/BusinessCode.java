@@ -1,7 +1,7 @@
 package fr.eni.projeteniavril2024.exception;
 
 public class BusinessCode {
-//    VALIDATION AUCTION
+//    AUCTION VALIDATION
 
     public static final String VALIDATION_AUCTION_NULL = "validation.auction.null";
     public static final String VALIDATION_AUCTION_UNIQUE = "validation.auction.unique";
@@ -25,6 +25,14 @@ public class BusinessCode {
     public static final String VALIDATION_AUCTION_WITHDRAWAL_CITY_BLANK = "validation.auction.withdrawal.city.blank";
     public static final String VALIDATION_AUCTION_WITHDRAWAL_CITY_LENGTH = "validation.auction.withdrawal.city.length";
 
+//    BID VALIDATION
+
+    public static final String VALIDATION_BID_NULL = "validation.bid.null";
+    public static final String VALIDATION_BID_AMOUNT_SMALLER = "validation.bid.amount.smaller";
+    public static final String VALIDATION_BID_CREDIT_INSUFFICIENT = "validation.bid.credit.insufficient";
+
 //    BLL AUCTION
+
     public static final String BLL_AUCTION_CREATE_ERROR = "bll.auction.create.error";
+    public static final String BLL_BID_CREATE_ERROR = "bll.bid.create.error";
 }

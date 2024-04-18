@@ -48,15 +48,19 @@ public class UserDAOImpl implements UserDAO {
             "       (:username, :last_name, :first_name, :email, :phone, :street, :postal_code, :city, :password, :credit, false);";
     private static final String UPDATE_BY_ID = "" +
             "UPDATE USERS " +
-            "SET username = :username, " +
-            "   last_name = :last_name, " +
-            "   first_name = :first_name, " +
-            "   email = :email, " +
-            "   phone = :phone, " +
-            "   street = :street, " +
-            "   postal_code = :postal_code, " +
-            "   city = :city, " +
-            "   password = :password " +
+            "   SET username = :username, " +
+            "       last_name = :last_name, " +
+            "       first_name = :first_name, " +
+            "       email = :email, " +
+            "       phone = :phone, " +
+            "       street = :street, " +
+            "       postal_code = :postal_code, " +
+            "       city = :city, " +
+            "       password = :password " +
+            "WHERE user_id = :user_id;";
+    private static final String UPDATE_CREDIT = "" +
+            "UPDATE USERS " +
+            "SET credit = :credit " +
             "WHERE user_id = :user_id;";
     private static final String DELETE_USER = "" +
             "DELETE " +
@@ -142,6 +146,14 @@ public class UserDAOImpl implements UserDAO {
         namedParameters.addValue("password", user.getPassword());
         namedParameters.addValue("user_id", user.getUserId());
         namedParameterJdbcTemplate.update(UPDATE_BY_ID, namedParameters);
+    }
+
+    @Override
+    public void updateCredit(int userId, int credit) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("user_id", userId);
+        namedParameters.addValue("credit", credit);
+        namedParameterJdbcTemplate.update(UPDATE_CREDIT, namedParameters);
     }
 
     @Override

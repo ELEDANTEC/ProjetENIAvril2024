@@ -56,6 +56,20 @@ public class SoldItemDAOImpl implements SoldItemDAO {
             "       (item_name, description, start_auction_date, end_auction_date, initial_price, user_id, category_id) " +
             "   VALUES " +
             "       (:item_name, :description, :start_auction_date, :end_auction_date, :initial_price, :user_id, :category_id);";
+    private static final String UPDATE = "" +
+            "UPDATE SOLD_ITEMS " +
+            "   SET item_name = :item_name, " +
+            "       description = :description, " +
+            "       start_auction_date = :start_auction_date, " +
+            "       end_auction_date = :end_auction_date, " +
+            "       initial_price = :initial_price, " +
+            "       sale_price = :sale_price, " +
+            "       category_id = :category_id " +
+            "WHERE item_id = :item_id;";
+    private static final String DELETE = "" +
+            "DELETE " +
+            "FROM SOLD_ITEMS " +
+            "WHERE item_id = :item_id;";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
@@ -78,7 +92,8 @@ public class SoldItemDAOImpl implements SoldItemDAO {
 
     @Override
     public SoldItem findById(int id) {
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource("item_id", id);
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_id", id);
         return namedParameterJdbcTemplate.queryForObject(
                 SELECT_BY_ID,
                 namedParameters,
@@ -101,6 +116,27 @@ public class SoldItemDAOImpl implements SoldItemDAO {
         Number key = keyHolder.getKey();
 
         return key.intValue();
+    }
+
+    @Override
+    public void update(SoldItem soldItem) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_id", soldItem.getItemId());
+        namedParameters.addValue("item_name", soldItem.getItemName());
+        namedParameters.addValue("description", soldItem.getDescription());
+        namedParameters.addValue("start_auction_date", soldItem.getStartAuctionDate());
+        namedParameters.addValue("end_auction_date", soldItem.getEndAuctionDate());
+        namedParameters.addValue("initial_price", soldItem.getInitialPrice());
+        namedParameters.addValue("sale_price", soldItem.getSalePrice());
+        namedParameters.addValue("category_id", soldItem.getCategory().getCategoryId());
+        namedParameterJdbcTemplate.update(UPDATE, namedParameters);
+    }
+
+    @Override
+    public void delete(int itemId) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_id", itemId);
+        namedParameterJdbcTemplate.update(DELETE, namedParameters);
     }
 
     @Override

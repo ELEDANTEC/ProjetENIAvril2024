@@ -143,7 +143,11 @@
 
 <!--    Liste des enchères en cours / enchères filtrées -->
     <div id="auctions-div" class="row row-cols-1 row-cols-md-2 g-4 mt-3">
-        <div th:each="auction: ${auctions}" th:if="${auction.saleStatus == 'En cours'}" class="col">
+        <div
+                th:each="auction: ${auctions}"
+                th:if="${auction.saleStatus == 'En cours'}"
+                class="col"
+        >
             <div class="card shadow border border-black border-3">
                 <div class="row g-0">
                     <div class="col-md-3 m-3">

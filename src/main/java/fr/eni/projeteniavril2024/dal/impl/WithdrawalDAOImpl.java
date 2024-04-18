@@ -21,6 +21,17 @@ public class WithdrawalDAOImpl implements WithdrawalDAO {
             "       (item_id, street, postal_code, city) " +
             "   VALUES " +
             "       (:item_id, :street, :postal_code, :city);";
+    private static final String UPDATE = "" +
+            "UPDATE WITHDRAWALS " +
+            "   SET item_id = :item_id, " +
+            "       street = :street, " +
+            "       postal_code = :postal_code, " +
+            "       city = :city " +
+            "WHERE item_id = :item_id;";
+    private static final String DELETE = "" +
+            "DELETE " +
+            "FROM WITHDRAWALS " +
+            "WHERE item_id = :item_id";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -48,6 +59,23 @@ public class WithdrawalDAOImpl implements WithdrawalDAO {
         namedParameters.addValue("postal_code", withdrawal.getPostalCode());
         namedParameters.addValue("city", withdrawal.getCity());
         namedParameterJdbcTemplate.update(INSERT_INTO, namedParameters);
+    }
+
+    @Override
+    public void update(Withdrawal withdrawal) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_id", withdrawal.getItemId());
+        namedParameters.addValue("street", withdrawal.getStreet());
+        namedParameters.addValue("postal_code", withdrawal.getPostalCode());
+        namedParameters.addValue("city", withdrawal.getCity());
+        namedParameterJdbcTemplate.update(UPDATE, namedParameters);
+    }
+
+    @Override
+    public void delete(int itemId) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("item_id", itemId);
+        namedParameterJdbcTemplate.update(DELETE, namedParameters);
     }
 
     public static class WithdrawalRowMapper implements RowMapper<Withdrawal> {

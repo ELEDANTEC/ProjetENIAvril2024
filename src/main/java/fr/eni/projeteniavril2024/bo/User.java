@@ -18,11 +18,11 @@ public class User {
     private String city;
     private String postalCode;
     private String password;
-    private String plainPassword;
-    private int credit;
-    private boolean administrator;
     private String newPassword;
     private String confirmationPassword;
+    private int credit;
+    private boolean administrator;
+
     private List<SoldItem> itemsSold;
     private List<SoldItem> itemsPurchased;
     private List<Bid> bidsPlaced;
@@ -124,14 +124,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPlainPassword() {
-        return plainPassword;
-    }
-
-    public void setPlainPassword(String plainPassword) {
-        this.plainPassword = plainPassword;
     }
 
     public int getCredit() {

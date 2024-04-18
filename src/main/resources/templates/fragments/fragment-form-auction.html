@@ -119,6 +119,7 @@
                             name="startAuctionDate"
                             id="item-start-auction-date"
                             th:field="*{startAuctionDate}"
+                            th:field-formatter="${@localDateFormatter}"
                     />
                 </div>
             </div>
@@ -134,6 +135,7 @@
                             name="endAuctionDate"
                             id="item-end-auction-date"
                             th:field="*{endAuctionDate}"
+                            th:field-formatter="${@localDateFormatter}"
                     />
                 </div>
             </div>
@@ -187,21 +189,45 @@
                     </div>
                 </div>
             </fieldset>
+            <input
+                    th:if="${action == '/auctions/update'}"
+                    type="hidden"
+                    name="itemId"
+                    th:field="*{itemId}"
+            />
+            <input
+                    th:if="${action == '/auctions/update'}"
+                    type="hidden"
+                    name="withdrawal.itemId"
+                    th:field="*{withdrawal.itemId}"
+            />
             <div>
                 <button
                         type="submit"
-                        id="submit-create"
-                        class="btn btn-primary w-25"
+                        id="submit"
+                        class="btn btn-primary w-25 mx-3"
                 >
                     Enregistrer
                 </button>
                 <a th:href="@{/auctions}">
                     <button
                             type="button"
-                            id="cancel-create"
-                            class="btn btn-danger w-25"
+                            id="cancel"
+                            class="btn btn-secondary w-25 mx-3"
                     >
                         Annuler
+                    </button>
+                </a>
+                <a
+                        th:if="${action == '/auctions/update'}"
+                        th:href="@{/auctions/delete(itemId=${auction.itemId})}"
+                >
+                    <button
+                            type="button"
+                            id="delete"
+                            class="btn btn-danger w-25 mx-3"
+                    >
+                        Annuler la vente
                     </button>
                 </a>
             </div>

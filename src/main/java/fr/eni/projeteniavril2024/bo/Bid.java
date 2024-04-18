@@ -8,40 +8,21 @@ import java.time.LocalDateTime;
  * @author yjeauneau
  */
 public class Bid {
-    private int userId;
-    private int itemId;
     private LocalDateTime bidDate;
     private int bidAmount;
+
+    private User buyer;
+    private SoldItem auction;
 
     public Bid() {
     }
 
     public Bid(
-            int userId,
-            int itemId,
             LocalDateTime bidDate,
             int bidAmount
     ) {
-        this.userId = userId;
-        this.itemId = itemId;
         this.bidDate = bidDate;
         this.bidAmount = bidAmount;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
     }
 
     public LocalDateTime getBidDate() {
@@ -58,5 +39,21 @@ public class Bid {
 
     public void setBidAmount(int bidAmount) {
         this.bidAmount = bidAmount;
+    }
+
+    public User getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(User buyer) {
+        this.buyer = buyer;
+    }
+
+    public SoldItem getAuction() {
+        return auction;
+    }
+
+    public void setAuction(SoldItem auction) {
+        this.auction = auction;
     }
 }
