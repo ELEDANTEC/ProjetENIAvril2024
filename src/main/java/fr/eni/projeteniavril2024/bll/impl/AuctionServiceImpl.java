@@ -1,10 +1,7 @@
 package fr.eni.projeteniavril2024.bll.impl;
 
 import fr.eni.projeteniavril2024.bll.AuctionService;
-import fr.eni.projeteniavril2024.bo.Category;
-import fr.eni.projeteniavril2024.bo.SoldItem;
-import fr.eni.projeteniavril2024.bo.User;
-import fr.eni.projeteniavril2024.bo.Withdrawal;
+import fr.eni.projeteniavril2024.bo.*;
 import fr.eni.projeteniavril2024.dal.*;
 import fr.eni.projeteniavril2024.exception.BusinessCode;
 import fr.eni.projeteniavril2024.exception.BusinessException;
@@ -42,7 +39,11 @@ public class AuctionServiceImpl implements AuctionService {
         List<SoldItem> auctions = soldItemDAO.findAll();
         if (!auctions.isEmpty()) {
             auctions.forEach(auction -> {
-                auction.setBids(bidDAO.findAll(auction.getItemId()));
+                List<Bid> bids = bidDAO.findAll(auction.getItemId());
+//                if (bids == null) {
+//                    bids = new ArrayList<>();
+//                }
+                auction.setBids(bids);
                 if (LocalDate.now().isAfter(auction.getEndAuctionDate())) {
                     auction.setSaleStatus("Enchères terminées");
                 } else if (LocalDate.now().isAfter(auction.getStartAuctionDate())) {
@@ -112,7 +113,12 @@ public class AuctionServiceImpl implements AuctionService {
         return category;
     }
 
-//    VALIDATION AUCTION
+    @Override
+    public void createBid(Bid bid) {
+        bidDAO.create(bid);
+    }
+
+    //    VALIDATION AUCTION
 
     public boolean isAuctionValid(
             SoldItem auction,

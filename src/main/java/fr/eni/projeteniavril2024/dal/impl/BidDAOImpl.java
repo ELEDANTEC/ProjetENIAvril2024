@@ -17,6 +17,11 @@ public class BidDAOImpl implements BidDAO {
             "SELECT user_id, item_id, bid_date, bid_amount " +
             "FROM BIDS " +
             "WHERE item_id = :item_id;";
+    private static final String INSERT_INTO = "" +
+            "INSERT INTO BIDS " +
+            "       (user_id, item_id, bid_date, bid_amount) " +
+            "   VALUES " +
+            "       (:user_id, :item_id, :bid_date, :bid_amount);";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -32,6 +37,16 @@ public class BidDAOImpl implements BidDAO {
                 namedParameters,
                 new BidRowMapper()
         );
+    }
+
+    @Override
+    public void create(Bid bid) {
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("user_id", bid.getUserId());
+        namedParameters.addValue("item_id", bid.getItemId());
+        namedParameters.addValue("bid_date", bid.getBidDate());
+        namedParameters.addValue("bid_amount", bid.getBidAmount());
+        namedParameterJdbcTemplate.update(INSERT_INTO, namedParameters);
     }
 
     public static class BidRowMapper implements RowMapper<Bid> {

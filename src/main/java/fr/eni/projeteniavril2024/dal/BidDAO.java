@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface BidDAO {
     List<Bid> findAll(int itemId);
+    void create(Bid bid);
 }

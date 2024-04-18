@@ -1,5 +1,6 @@
 package fr.eni.projeteniavril2024.bll;
 
+import fr.eni.projeteniavril2024.bo.Bid;
 import fr.eni.projeteniavril2024.bo.Category;
 import fr.eni.projeteniavril2024.bo.SoldItem;
 
@@ -11,4 +12,5 @@ public interface AuctionService {
     void createAuction(SoldItem auction);
     List<Category> getCategories();
     Category getCategoryById(int id);
+    void createBid(Bid bid);
 }
