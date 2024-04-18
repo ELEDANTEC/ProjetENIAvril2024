@@ -154,7 +154,7 @@
                     </div>
                     <div class="col-md-7 m-3">
                         <div class="text-decoration-underline">
-                            <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/auctions/details(auction=${auction.itemId})}">
+                            <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/auctions/details(itemId=${auction.itemId})}">
                                 <span th:text="${auction.itemName}"></span>
                             </a>
                             <span th:unless="${#authorization.expression('isAuthenticated')}" th:text="${auction.itemName}"></span>

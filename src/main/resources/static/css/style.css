@@ -38,6 +38,12 @@
 }
 
 /*create auction*/
+textarea.auction-detail {
+    border: none;
+    outline: none;
+    resize: none;
+}
+
 fieldset.scheduler-border {
     border: 1px groove #000 !important;
     padding: 0 1.4em 1.4em 1.4em !important;

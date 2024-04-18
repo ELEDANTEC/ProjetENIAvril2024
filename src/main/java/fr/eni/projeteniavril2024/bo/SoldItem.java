@@ -1,6 +1,7 @@
 package fr.eni.projeteniavril2024.bo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,6 +142,9 @@ public class SoldItem {
     }
 
     public void addBid(Bid bid) {
+        if (this.bids == null) {
+            this.bids = new ArrayList<>();
+        }
         this.bids.add(bid);
     }
 
