@@ -11,6 +11,7 @@ public interface UserDAO {
     User findByEmail(String email);
     void create(User user);
     void update(User user);
+    void updateCredit(int userId, int credit);
     void deleteById(int userId);
     int existingUser(int userId);
     int isUniqueUsername(String username);

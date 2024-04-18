@@ -40,9 +40,6 @@ public class AuctionServiceImpl implements AuctionService {
         if (!auctions.isEmpty()) {
             auctions.forEach(auction -> {
                 List<Bid> bids = bidDAO.findAll(auction.getItemId());
-//                if (bids == null) {
-//                    bids = new ArrayList<>();
-//                }
                 auction.setBids(bids);
                 if (LocalDate.now().isAfter(auction.getEndAuctionDate())) {
                     auction.setSaleStatus("Enchères terminées");
@@ -61,15 +58,29 @@ public class AuctionServiceImpl implements AuctionService {
         SoldItem soldItem = soldItemDAO.findById(id);
         if (soldItem != null) {
             soldItem.setBids(bidDAO.findAll(soldItem.getItemId()));
-            if (LocalDate.now().isAfter(soldItem.getEndAuctionDate())) {
-                soldItem.setSaleStatus("Enchères terminées");
-            } else if (LocalDate.now().isBefore(soldItem.getStartAuctionDate())) {
+            if (LocalDate.now().isBefore(soldItem.getStartAuctionDate())) {
+                soldItem.setSaleStatus("Créée");
+            } else if (LocalDate.now().isBefore(soldItem.getEndAuctionDate())) {
                 soldItem.setSaleStatus("En cours");
             } else {
-                soldItem.setSaleStatus("Créée");
+                soldItem.setSaleStatus("Enchères terminées");
             }
         }
         return soldItem;
+    }
+
+    @Override
+    public List<Category> getCategories() {
+        return categoryDAO.findAll();
+    }
+
+    @Override
+    public Category getCategoryById(int id) {
+        Category category = null;
+        if (id > 0) {
+            category = categoryDAO.findById(id);
+        }
+        return category;
     }
 
     @Override
@@ -100,25 +111,65 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public List<Category> getCategories() {
-        return categoryDAO.findAll();
-    }
-
-    @Override
-    public Category getCategoryById(int id) {
-        Category category = null;
-        if (id > 0) {
-            category = categoryDAO.findById(id);
-        }
-        return category;
-    }
-
-    @Override
     public void createBid(Bid bid) {
-        bidDAO.create(bid);
+        BusinessException businessException = new BusinessException();
+        boolean isValid = true;
+        isValid &= isBidValid(bid, businessException);
+        if (isValid) {
+            isValid &= isBidAmountValid(bid, businessException);
+            isValid &= isCreditSufficientValid(bid, businessException);
+        }
+        if (isValid) {
+            User buyer = bid.getBuyer();
+            if (!bid.getAuction().getBids().isEmpty()) {
+                User lastBuyer = bid.getAuction().getBids().getLast().getBuyer();
+                int lastBidAmount = bid.getAuction().getBids().getLast().getBidAmount();
+                lastBuyer.setCredit(lastBuyer.getCredit() + lastBidAmount);
+                userDAO.updateCredit(lastBuyer.getUserId(), lastBuyer.getCredit());
+                if (lastBuyer.getUserId() == buyer.getUserId()) {
+                    buyer = lastBuyer;
+                }
+                boolean existingBid = false;
+                for (Bid el : bid.getAuction().getBids()) {
+                    if (el.getBuyer().getUserId() == buyer.getUserId()) {
+                        existingBid = true;
+                        break;
+                    }
+                }
+                if (existingBid) {
+                    bidDAO.delete(buyer.getUserId(), bid.getAuction().getItemId());
+                }
+            }
+            buyer.setCredit(buyer.getCredit() - bid.getBidAmount());
+            userDAO.updateCredit(buyer.getUserId(), buyer.getCredit());
+            bidDAO.create(bid);
+        } else {
+            businessException.add(BusinessCode.BLL_BID_CREATE_ERROR);
+            throw businessException;
+        }
     }
 
-    //    VALIDATION AUCTION
+    @Override
+    public void updateAuction(SoldItem auction) {
+        soldItemDAO.update(auction);
+        withdrawalDAO.update(auction.getWithdrawal());
+    }
+
+    @Override
+    public void deleteAuction(int itemId) {
+        SoldItem auction = soldItemDAO.findById(itemId);
+        if (auction.getBids() != null && !auction.getBids().isEmpty()) {
+            for (Bid bid : auction.getBids()) {
+                bidDAO.delete(bid.getBuyer().getUserId(), bid.getAuction().getItemId());
+            }
+        }
+        if (auction.getWithdrawal() != null) {
+            withdrawalDAO.delete(itemId);
+        }
+        soldItemDAO.delete(itemId);
+    }
+
+    //    AUCTION VALIDATION
 
     public boolean isAuctionValid(
             SoldItem auction,
@@ -281,4 +332,48 @@ public class AuctionServiceImpl implements AuctionService {
         }
         return true;
     }
+
+//    BID VALIDATION
+
+    public boolean isBidValid(
+            Bid bid,
+            BusinessException businessException
+    ) {
+        if (bid == null) {
+            businessException.add(BusinessCode.VALIDATION_BID_NULL);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isBidAmountValid(
+            Bid bid,
+            BusinessException businessException
+    ) {
+        if (!bid.getAuction().getBids().isEmpty()) {
+            if (bid.getBidAmount() <= bid.getAuction().getBids().getLast().getBidAmount()) {
+                businessException.add(BusinessCode.VALIDATION_BID_AMOUNT_SMALLER);
+                return false;
+            }
+        } else {
+            if (bid.getBidAmount() <= bid.getAuction().getInitialPrice()) {
+                businessException.add(BusinessCode.VALIDATION_BID_AMOUNT_SMALLER);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCreditSufficientValid(
+            Bid bid,
+            BusinessException businessException
+    ) {
+        if (bid.getBuyer().getCredit() < bid.getBidAmount()) {
+            businessException.add(BusinessCode.VALIDATION_BID_CREDIT_INSUFFICIENT);
+            return false;
+        }
+        return true;
+    }
+
+
 }

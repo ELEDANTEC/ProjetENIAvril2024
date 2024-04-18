@@ -71,7 +71,10 @@
                         <span th:text="'Meilleure offre :'"></span>
                     </div>
                     <div th:if="${auction.bids.size > 0}" class="col-8">
-                        <span th:text="${auction.bids.get(auction.bids.size() - 1).getBidAmount + ' pts'}"></span>
+                        <span th:text="${auction.bids.get(auction.bids.size() - 1).bidAmount + ' points par '}"></span>
+                        <a th:href="@{/user/{userId}(userId=${auction.bids.get(auction.bids.size() - 1).buyer.userId})}">
+                            <span th:text="${auction.bids.get(auction.bids.size() - 1).buyer.username}"></span>
+                        </a>
                     </div>
                     <div th:unless="${auction.bids.size > 0}" class="col-8">
                         <span th:text="'aucune offre en cours'"></span>
@@ -111,10 +114,12 @@
                         <span th:text="'Vendeur :'"></span>
                     </div>
                     <div class="col-8">
-                        <span th:text="${auction.seller.username}"></span>
+                        <a th:href="@{/user/{userId}(userId=${auction.seller.userId})}">
+                            <span th:text="${auction.seller.username}"></span>
+                        </a>
                     </div>
                 </div>
-                <div class="my-2 row">
+                <div th:if="${'En cours'.equals(auction.salePrice)}" class="my-2 row">
                     <div class="col-4">
                         <label for="my-bid">
                             Ma proposition :
@@ -131,11 +136,12 @@
                     </div>
                 </div>
                 <input
+                        th:if="${'En cours'.equals(auction.salePrice)}"
                         type="hidden"
                         name="itemId"
-                        th:field="*{itemId}"
+                        th:field="*{auction.itemId}"
                 />
-                <div>
+                <div th:if="${'En cours'.equals(auction.salePrice)}" >
                     <button
                             type="submit"
                             id="submit-bid"

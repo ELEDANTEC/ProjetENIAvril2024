@@ -29,18 +29,15 @@ public class RegisterController {
 
     @PostMapping("/register")
     public String registerUser(
-            Model model,
             @Valid @ModelAttribute("user") User user,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            return "security/register.html";
-        }
-        if (bindingResult.hasErrors()) {
+            bindingResult.rejectValue("username", "error.username", "Le pseudo est déjà utilisé");
+            bindingResult.rejectValue("email", "error.email", "L'adresse e-mail est déjà utilisée");
             return "security/register.html";
         }
         userService.createUser(user);
-        model.addAttribute("successMessage", "Votre compte a été créé avec succès !");
         return "redirect:/login";
     }
 }

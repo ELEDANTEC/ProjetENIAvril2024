@@ -36,6 +36,7 @@ if (isAuthenticated) {
 function filterAuctions() {
     let filters = document.getElementById('search-filters').value;
     let selectedCategory = parseInt(document.getElementById('select-category').value);
+    let auctionsChecked = (isAuthenticated ? document.getElementById('radio-auctions').checked : false);
     let myAuctionsChecked = (isAuthenticated ? document.getElementById('radio-my-auctions').checked : false);
     let auctionsCheckboxes = (isAuthenticated
         ?
@@ -83,7 +84,7 @@ function filterAuctions() {
             &&
             obj.bids.length > 0
         ) {
-            lastBidIsMine = obj.bids[obj.bids.length - 1].userId === userSession.userId;
+            lastBidIsMine = obj.bids[obj.bids.length - 1].buyer.userId === userSession.userId;
         }
 
         if (
@@ -93,15 +94,17 @@ function filterAuctions() {
                 &&
                 (
                     (
-                        myAuctionsChecked
+                        auctionsChecked
                         &&
-                        obj.seller.userId === userSession.userId
+                            !auctionsCheckboxes.openAuctions
                         &&
-                        saleStatus.includes(obj.saleStatus)
+                            !auctionsCheckboxes.myCurrentBids
+                        &&
+                            !auctionsCheckboxes.myWinningBids
                     ) || (
                         auctionsCheckboxes.myCurrentBids
                         &&
-                        obj.bids.find(bid => bid.userId === userSession.userId)
+                        obj.bids.find(bid => bid.buyer.userId === userSession.userId)
                         &&
                         'En cours'.includes(obj.saleStatus)
                     ) || (
@@ -114,6 +117,12 @@ function filterAuctions() {
                         auctionsCheckboxes.openAuctions
                         &&
                         'En cours'.includes(obj.saleStatus)
+                    ) || (
+                        myAuctionsChecked
+                        &&
+                        obj.seller.userId === userSession.userId
+                        &&
+                        saleStatus.includes(obj.saleStatus)
                     )
                 )
             )
@@ -141,7 +150,7 @@ function filterAuctions() {
         const year = date.getFullYear();
         const endAuctionDate = `${day}/${month.toString().padStart(2, '0')}/${year}`;
 
-        newDivContent += `<div class="col">\r\n`;
+        newDivContent += `<div class="col">`;
         newDivContent += `<div class="card shadow border border-black border-3">`;
         newDivContent += `<div class="row g-0">`;
         newDivContent += `<div class="col-md-3 m-3">`;
@@ -150,7 +159,7 @@ function filterAuctions() {
         newDivContent += `<div class="col-md-7 m-3">`;
         newDivContent += `<div class="text-decoration-underline">`;
         if (isAuthenticated) {
-            newDivContent += `<a href="/auctions/details(auction=` + auction.itemId + `)">`;
+            newDivContent += `<a href="/auctions/details?itemId=` + auction.itemId + `">`;
             newDivContent += `<span>` + auction.itemName + `</span>`;
             newDivContent += `</a>`;
         } else {

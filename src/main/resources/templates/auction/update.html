@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        th:replace="~{layouts/layout :: layout(
+            pageContent=~{:: .main-content},
+            pageTitle=~{:: title},
+            additionalCss=~{:: fragment-css}
+        )}"
+>
+<div th:fragment="fragment-css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</div>
+
+<title>Modification d'une vente</title>
+
+<main class="main-content">
+    <h1 class="text-center">Nouvelle vente</h1>
+    <form th:replace="~{fragments/fragment-form-auction :: frag-form-auction('/auctions/update')}"></form>
+</main>
+</html>
