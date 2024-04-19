@@ -35,7 +35,7 @@ public class AuctionController {
 
     @GetMapping("/details")
     public String displayAuction(
-            @RequestParam(value="itemId", required = false) int itemId,
+            @RequestParam(value="itemId") int itemId,
             @ModelAttribute("userSession") User userSession,
             Model model
     ) {
@@ -116,7 +116,7 @@ public class AuctionController {
 
     @GetMapping("/update")
     public String displayUpdateAuctionForm(
-            @RequestParam(value="itemId", required = false) int itemId,
+            @RequestParam(value="itemId") int itemId,
             @ModelAttribute("userSession") User userSession,
             Model model
     ) {
@@ -145,7 +145,7 @@ public class AuctionController {
 
     @GetMapping("/delete")
     public String deleteAnAuction(
-            @RequestParam(value="itemId", required = false) int itemId
+            @RequestParam(value="itemId") int itemId
     ) {
         auctionService.deleteAuction(itemId);
         return "redirect:/auctions";
