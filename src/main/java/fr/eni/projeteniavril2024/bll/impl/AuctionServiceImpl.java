@@ -151,8 +151,24 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void updateAuction(SoldItem auction) {
-        soldItemDAO.update(auction);
-        withdrawalDAO.update(auction.getWithdrawal());
+        BusinessException businessException = new BusinessException();
+        boolean isValid = true;
+        isValid &= isAuctionNameValid(auction.getItemName(), businessException);
+        isValid &= isAuctionDescriptionValid(auction.getDescription(), businessException);
+        isValid &= isAuctionDateStartValid(auction.getStartAuctionDate(), businessException);
+        isValid &= isAuctionDateEndValid(auction.getStartAuctionDate(), auction.getEndAuctionDate(), businessException);
+        isValid &= isAuctionCategoryValid(auction.getCategory(), businessException);
+        isValid &= isAuctionWithdrawalValid(auction.getWithdrawal(), businessException);
+        isValid &= isAuctionWithdrawalStreetValid(auction.getWithdrawal().getStreet(), businessException);
+        isValid &= isAuctionWithdrawalPostalCodeValid(auction.getWithdrawal().getPostalCode(), businessException);
+        isValid &= isAuctionWithdrawalCityValid(auction.getWithdrawal().getCity(), businessException);
+        if (isValid) {
+            soldItemDAO.update(auction);
+            withdrawalDAO.update(auction.getWithdrawal());
+        } else {
+            businessException.add(BusinessCode.BLL_AUCTION_CREATE_ERROR);
+            throw businessException;
+        }
     }
 
     @Override
@@ -240,9 +256,11 @@ public class AuctionServiceImpl implements AuctionService {
             businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_END_NULL);
             return false;
         }
-        if (startAuctionDate.isAfter(endAuctionDate)) {
-            businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_END_WRONG);
-            return false;
+        if (startAuctionDate != null) {
+            if (startAuctionDate.isAfter(endAuctionDate)) {
+                businessException.add(BusinessCode.VALIDATION_AUCTION_DATE_END_WRONG);
+                return false;
+            }
         }
         return true;
     }
