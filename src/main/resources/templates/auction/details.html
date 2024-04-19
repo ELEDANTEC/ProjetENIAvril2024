@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        th:replace="~{layouts/layout :: layout(
+            pageContent=~{:: .main-content},
+            pageTitle=~{:: title},
+            additionalCss=~{:: fragment-css}
+        )}"
+>
+<div th:fragment="fragment-css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</div>
+
+<title>Détail d'une vente</title>
+
+<main class="main-content">
+    <h1 class="text-center">Détail d'une vente</h1>
+    <form
+            th:action="'/auctions/details'"
+            th:method="post"
+            th:object="${bid}"
+    >
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <img
+                                th:src="@{${'/images/' + auction.itemId + '.png'}}"
+                                th:onerror="|this.src='@{/images/default.png}';this.onerror=null;|" width="400" height="400"
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div th:replace="~{fragments/fragment-errors :: frag-errors}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="my-2 row">
+                    <div class="col">
+                        <span th:text="${auction.itemName}" class="fw-bold"></span>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <label for="item-description-detail">
+                            Description :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <textarea
+                                name="description"
+                                id="item-description-detail"
+                                th:text="${auction.description}"
+                                class="auction-detail"
+                                disabled
+                        ></textarea>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <span th:text="'Catégorie :'"></span>
+                    </div>
+                    <div class="col-8">
+                        <span th:text="${auction.category.label}"></span>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <span th:text="'Meilleure offre :'"></span>
+                    </div>
+                    <div th:if="${auction.bids.size > 0}" class="col-8">
+                        <span th:text="${auction.bids.get(auction.bids.size() - 1).bidAmount + ' points par '}"></span>
+                        <a th:href="@{/user/{userId}(userId=${auction.bids.get(auction.bids.size() - 1).buyer.userId})}">
+                            <span th:text="${auction.bids.get(auction.bids.size() - 1).buyer.username}"></span>
+                        </a>
+                    </div>
+                    <div th:unless="${auction.bids.size > 0}" class="col-8">
+                        <span th:text="'aucune offre en cours'"></span>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <span th:text="'Mise à prix :'"></span>
+                    </div>
+                    <div class="col-8">
+                        <span th:text="${auction.initialPrice + ' points'}"></span>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <span th:text="${'Fin de l''enchère :'}"></span>
+                    </div>
+                    <div class="col-8">
+                        <span th:text="${#temporals.format(auction.endAuctionDate, 'dd/MM/yyyy')}"></span>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <span th:text="'Retrait :'"></span>
+                    </div>
+                    <div class="col-8">
+                        <div>
+                            <span th:text="${auction.withdrawal.street}"></span>
+                        </div>
+                        <div>
+                            <span th:text="${auction.withdrawal.postalCode + ' ' + auction.withdrawal.city}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="my-2 row">
+                    <div class="col-4">
+                        <span th:text="'Vendeur :'"></span>
+                    </div>
+                    <div class="col-8">
+                        <a th:href="@{/user/{userId}(userId=${auction.seller.userId})}">
+                            <span th:text="${auction.seller.username}"></span>
+                        </a>
+                    </div>
+                </div>
+                <div th:if="${'En cours'.equals(auction.saleStatus)}" class="my-2 row">
+                    <div class="col-4">
+                        <label for="my-bid">
+                            Ma proposition :
+                        </label>
+                    </div>
+                    <div class="col-8">
+                        <input
+                                type="number"
+                                name="bidAmount"
+                                id="my-bid"
+                                min="0"
+                                th:field="*{bidAmount}"
+                        />
+                    </div>
+                </div>
+                <input
+                        th:if="${'En cours'.equals(auction.saleStatus)}"
+                        type="hidden"
+                        name="itemId"
+                        th:field="*{auction.itemId}"
+                />
+                <div th:if="${'En cours'.equals(auction.saleStatus)}" >
+                    <button
+                            type="submit"
+                            id="submit-bid"
+                            class="btn btn-primary w-25"
+                    >
+                        Enchérir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+</html>

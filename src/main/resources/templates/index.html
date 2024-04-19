@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        th:replace="~{layouts/layout :: layout(
+            pageContent=~{:: .main-content},
+            pageTitle=~{:: title},
+            additionalCss=~{}
+        )}"
+>
+
+<title>Accueil</title>
+
+<main class="main-content">
+    <h1 class="text-center">Liste des enchères</h1>
+
+<!--    Filtrage des enchères -->
+    <div>
+        Filtres :
+    </div>
+    <form>
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div>
+                        <input type="search" id="search-filters" class="w-75" placeholder="Le nom de l'article contient">
+                    </div>
+                    <label for="select-category">Catégorie :</label>
+                    <select id="select-category" class="form-select w-75">
+                        <option value=0 selected="selected">
+                            Toutes
+                        </option>
+                        <option
+                                th:each="category: ${categoriesSession}"
+                                th:value="${category.categoryId}"
+                                th:text="${category.label}"
+                        ></option>
+                    </select>
+                </div>
+<!--                <div class="row">-->
+                <div th:if="${#authorization.expression('isAuthenticated')}" class="row">
+                    <div class="col">
+                        <div>
+                            <input
+                                    type="radio"
+                                    name="radio-filters"
+                                    id="radio-auctions"
+                                    checked="checked"
+                            />
+                            <label for="radio-auctions">
+                                Achats
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="auctions"
+                                    id="open-auctions"
+                                    checked="checked"
+                            />
+                            <label for="open-auctions">
+                                enchères ouvertes
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="auctions"
+                                    id="my-current-bids"
+                            />
+                            <label for="my-current-bids">
+                                mes enchères en cours
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="auctions"
+                                    id="my-winning-bids"
+                            />
+                            <label for="my-winning-bids">
+                                mes enchères remportées
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>
+                            <input
+                                    type="radio"
+                                    name="radio-filters"
+                                    id="radio-my-auctions"
+                            />
+                            <label for="radio-my-auctions">
+                                Mes ventes
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="my-auctions"
+                                    id="my-open-auctions"
+                                    disabled
+                            />
+                            <label for="my-open-auctions">
+                                mes ventes en cours
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="my-auctions"
+                                    id="my-not-started-auctions"
+                                    disabled
+                            />
+                            <label for="my-not-started-auctions">
+                                ventes non débutées
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                    type="checkbox"
+                                    name="my-auctions"
+                                    id="my-ended-auctions"
+                                    disabled
+                            />
+                            <label for="my-ended-auctions">
+                                ventes terminées
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <button
+                        type="button"
+                        id="submit-filters"
+                        class="btn btn-primary w-75 h-75"
+                        th:text="'Rechercher'"
+                >
+                </button>
+            </div>
+        </div>
+    </form>
+
+<!--    Liste des enchères en cours / enchères filtrées -->
+    <div id="auctions-div" class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+        <div
+                th:each="auction: ${auctions}"
+                th:if="${auction.saleStatus == 'En cours'}"
+                class="col"
+        >
+            <div class="card shadow border border-black border-3">
+                <div class="row g-0">
+                    <div class="col-md-3 m-3">
+                        <img
+                                th:src="@{${'/images/' + auction.itemId + '.png'}}"
+                                th:onerror="|this.src='@{/images/default.png}';this.onerror=null;|" width="100" height="100"
+                        />
+                    </div>
+                    <div class="col-md-7 m-3">
+                        <div class="text-decoration-underline">
+                            <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/auctions/details(itemId=${auction.itemId})}">
+                                <span th:text="${auction.itemName}"></span>
+                            </a>
+                            <span th:unless="${#authorization.expression('isAuthenticated')}" th:text="${auction.itemName}"></span>
+                        </div>
+                        <div th:if="${auction.bids.size > 0}">
+                            <span th:text="${'Enchère actuelle : ' + auction.bids.get(auction.bids.size() - 1).getBidAmount + ' points'}"></span>
+                        </div>
+                        <div th:unless="${auction.bids.size > 0}">
+                            <span th:text="${'Prix initial : ' + auction.initialPrice + ' points'}"></span>
+                        </div>
+                        <div>
+                            <span th:text="${'Fin de l''enchère : ' + #temporals.format(auction.endAuctionDate, 'dd/MM/yyyy')}"></span>
+                        </div>
+                        <div>
+                            <span th:text="${'Vendeur : '}"></span>
+                            <a th:if="${#authorization.expression('isAuthenticated')}" th:href="@{/user/{userId}(userId=${auction.seller.userId})}">
+                                <span th:text="${auction.seller.username}"></span>
+                            </a>
+                            <span th:unless="${#authorization.expression('isAuthenticated')}" th:text="${auction.seller.username}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        let auctions = /*[[${auctions}]]*/ [];
+        let isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
+        let userSession = [[${userSession}]];
+    </script>
+    <script th:src="@{/scripts/filters.js}"></script>
+
+</main>
+</html>

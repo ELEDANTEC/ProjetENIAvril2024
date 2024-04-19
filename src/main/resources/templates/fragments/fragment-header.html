@@ -1,0 +1,64 @@
+<header
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="frag-header"
+        class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom"
+>
+    <a
+            th:href="@{/}"
+            class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+    >
+        <img src="/images/eni_auctions.png" alt="logo" height="50" width="50">
+        <span>ENI-Enchères</span>
+    </a>
+    <ul
+            th:if="${#authorization.expression('isAuthenticated')}"
+            class="nav nav-pills"
+    >
+        <li class="nav-item">
+            <a
+                    th:href="@{/auctions}"
+                    class="nav-link"
+            >
+                Enchères
+            </a>
+        </li>
+        <li class="nav-item">
+            <a
+                    th:href="@{/auctions/sell}"
+                    class="nav-link"
+            >
+                Vendre un article
+            </a>
+        </li>
+        <li class="nav-item">
+            <a
+                    th:if="${userSession != null && userSession.userId > 0}"
+                    th:href="@{'/user/' + ${userSession.userId}}"
+                    class="nav-link"
+            >
+                Mon profil
+            </a>
+        </li>
+        <li class="nav-item">
+            <a
+                    th:href="@{/logout}"
+                    class="nav-link"
+            >
+                Déconnexion
+            </a>
+        </li>
+    </ul>
+    <ul
+            th:unless="${#authorization.expression('isAuthenticated')}"
+            class="nav nav-pills"
+    >
+        <li class="nav-item">
+            <a
+                th:href="@{/login}"
+                class="nav-link"
+            >
+                S'inscrire - Se connecter
+            </a>
+        </li>
+    </ul>
+</header>
