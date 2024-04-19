@@ -122,8 +122,8 @@ public class AuctionServiceImpl implements AuctionService {
         if (isValid) {
             User buyer = bid.getBuyer();
             if (!bid.getAuction().getBids().isEmpty()) {
-                User lastBuyer = bid.getAuction().getBids().getLast().getBuyer();
-                int lastBidAmount = bid.getAuction().getBids().getLast().getBidAmount();
+                User lastBuyer = bid.getAuction().getBids().get(bid.getAuction().getBids().size() - 1).getBuyer();
+                int lastBidAmount = bid.getAuction().getBids().get(bid.getAuction().getBids().size() - 1).getBidAmount();
                 lastBuyer.setCredit(lastBuyer.getCredit() + lastBidAmount);
                 userDAO.updateCredit(lastBuyer.getUserId(), lastBuyer.getCredit());
                 if (lastBuyer.getUserId() == buyer.getUserId()) {
@@ -351,7 +351,7 @@ public class AuctionServiceImpl implements AuctionService {
             BusinessException businessException
     ) {
         if (!bid.getAuction().getBids().isEmpty()) {
-            if (bid.getBidAmount() <= bid.getAuction().getBids().getLast().getBidAmount()) {
+            if (bid.getBidAmount() <= bid.getAuction().getBids().get(bid.getAuction().getBids().size() - 1).getBidAmount()) {
                 businessException.add(BusinessCode.VALIDATION_BID_AMOUNT_SMALLER);
                 return false;
             }

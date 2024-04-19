@@ -119,7 +119,7 @@
                         </a>
                     </div>
                 </div>
-                <div th:if="${'En cours'.equals(auction.salePrice)}" class="my-2 row">
+                <div th:if="${'En cours'.equals(auction.saleStatus)}" class="my-2 row">
                     <div class="col-4">
                         <label for="my-bid">
                             Ma proposition :
@@ -136,12 +136,12 @@
                     </div>
                 </div>
                 <input
-                        th:if="${'En cours'.equals(auction.salePrice)}"
+                        th:if="${'En cours'.equals(auction.saleStatus)}"
                         type="hidden"
                         name="itemId"
                         th:field="*{auction.itemId}"
                 />
-                <div th:if="${'En cours'.equals(auction.salePrice)}" >
+                <div th:if="${'En cours'.equals(auction.saleStatus)}" >
                     <button
                             type="submit"
                             id="submit-bid"
